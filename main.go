@@ -20,6 +20,12 @@ type Artists struct {
 	ConcertDates string   `json:"concertDates"`
 	Relations    string   `json:"relations"`
 }
+
+func (a Artists) BandName() (string, []string, int) {
+	return a.Name, a.Members, a.CreationDate
+
+}
+
 type Locations struct {
 	Index []struct {
 		ID        int      `json:"id"`
@@ -42,7 +48,7 @@ type Relation struct {
 
 func main() {
 
-	response, err := http.Get("https://groupietrackers.herokuapp.com/api/relation")
+	response, err := http.Get("https://groupietrackers.herokuapp.com/api/artists")
 
 	if err != nil {
 		fmt.Print(err.Error())
@@ -55,7 +61,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	var jsonData Relation
+	jsonData := []Artists{}
 
 	err = json.Unmarshal(responseData, &jsonData)
 
@@ -63,22 +69,14 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Println(jsonData)
-	// for i := 0; i < len(jsonData); i++ {
-	// 	fmt.Println(jsonData[i])
+	//fmt.Println(jsonData)
 
-	// }
+	//fmt.Println(jsonData.BandName)
 
-	//fmt.Println(string(responseData))
+	//a := Artists{Name: `json:"name"`}
 
-	// var responseObject Config
-	// json.Unmarshal(responseData, &responseObject)
+	for i := 0; i < len(jsonData); i++ {
+		fmt.Println(jsonData[i].BandName())
 
-	// fmt.Println(len(responseObject.Artists.Name))
-
-	//fmt.Printf(responseObject.Artists.FirstAlbum)
-
-	// for _, loc := range responseObject.Artists.Name {
-	// 	fmt.Println(loc)
-
+	}
 }
