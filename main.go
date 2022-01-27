@@ -3,11 +3,11 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
-	"text/template"
 )
 
 /*This var is a pointer towards template.Template that is a
@@ -21,6 +21,8 @@ func init() {
 	tpl = template.Must(template.ParseGlob("templates/*html"))
 }
 
+var jsonData []Artists
+
 type Artists struct {
 	ID           int      `json:"id"`
 	Image        string   `json:"image"`
@@ -33,10 +35,12 @@ type Artists struct {
 	Relations    string   `json:"relations"`
 }
 
-func (a Artists) ArtistInfo() (string, []string, int) {
-	return a.Name, a.Members, a.CreationDate
+func (a Artists) ArtistInfo() string {
+	return a.Image
 
 }
+
+var sArtists []Artists
 
 type Locations struct {
 	Index []struct {
@@ -114,14 +118,14 @@ func unmarshalArtists() {
 
 	//fmt.Println(jsonData)
 
-	//fmt.Println(jsonData.BandName)
+	fmt.Println(jsonData[0:2])
 
 	//a := Artists{Name: `json:"name"`}
 
-	for i := 0; i < len(jsonData); i++ {
-		fmt.Println(jsonData[i].ArtistInfo())
+	// for i := 0; i < len(jsonData); i++ {
+	// 	fmt.Println(jsonData[i].ArtistInfo())
 
-	}
+	// }
 
 }
 
@@ -154,10 +158,10 @@ func unmarshalDates() {
 
 	//a := Artists{Name: `json:"name"`}
 
-	for i := 0; i < len(jsonData.Index); i++ {
-		fmt.Println(jsonData.Index[i])
+	// for i := 0; i < len(jsonData.Index); i++ {
+	// 	fmt.Println(jsonData.Index[i])
 
-	}
+	// }
 
 }
 
@@ -199,28 +203,60 @@ func unmarshalLocations() {
 
 }
 
-func homePage(w http.ResponseWriter, r *http.Request) {
-
-	if r.URL.Path != "/" {
-		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
-	} else {
-		tpl.ExecuteTemplate(w, "index.html", nil)
-	}
-}
-
 func requests() {
 	fs := http.FileServer(http.Dir("./templates"))
 
 	http.ListenAndServe(":8080", nil)
 	http.Handle("/", fs)
-	http.HandleFunc("/index.html", homePage)
+	http.HandleFunc("/index.html", index)
 }
 
 func main() {
 	//unmarshalRelations()
-	unmarshalLocations()
+	//unmarshalLocations()
 	//unmarshalDates()
 	//unmarshalArtists()
 
-	//requests()
+	response, err := http.Get("https://groupietrackers.herokuapp.com/api/artists")
+
+	if err != nil {
+		fmt.Print(err.Error())
+		os.Exit(1)
+	}
+	defer response.Body.Close()
+
+	responseData, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	jsonData := []Artists{}
+
+	err = json.Unmarshal(responseData, &jsonData)
+
+	if err != nil {
+		panic(err)
+	}
+
+	//fmt.Println(jsonData)
+
+	fmt.Println(jsonData[0:2])
+
+	fmt.Println()
+
+	fs := http.FileServer(http.Dir("./templates"))
+
+	http.Handle("/", fs)
+	http.HandleFunc("/index.html", index)
+	http.ListenAndServe(":8080", nil)
+}
+
+func index(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(jsonData)
+	if r.URL.Path != "/" {
+		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
+	} else {
+
+		tpl.ExecuteTemplate(w, "index.html", jsonData[0])
+	}
 }
