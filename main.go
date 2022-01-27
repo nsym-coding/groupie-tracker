@@ -33,10 +33,6 @@ type Locations struct {
 } `json:"index"`
 	}
 
-// func (l Locations) LocationSpot() (int, []string){
-// 	return l.ID, l.Locations
-// }
-
 type Dates struct {
 	Index []struct {
 		ID    int      `json:"id"`
@@ -50,12 +46,6 @@ type Relations struct {
 		DatesLocations map[string][]string 	`json:"DatesLocations`
 } `json:"index`
 	}
-
-
-// func (r Relations) RelationData() (int, map[string][]string) {
-// 	return r.ID, r.DatesLocations
-
-// }
 
 func artists() {
 		response, err := http.Get("https://groupietrackers.herokuapp.com/api/artists")
@@ -78,11 +68,11 @@ func artists() {
 		fmt.Println(err)
 			}
 		//fmt.Printf("%+v\n", responseObject)
-		//fmt.Println(responseObject)
+		fmt.Println(responseObject[23])
 
-		 for i := 0; i < len(responseObject); i++ {
-       	 fmt.Println(responseObject[i].BandName())
-     }
+	// 	 for i := 0; i < len(responseObject); i++ {
+    //    	 fmt.Println(responseObject[i].BandName())
+    //  }
 	}
 
 func locations() {
@@ -99,17 +89,17 @@ func locations() {
 
 		//fmt.Println(string(responseData))
 	
-		var responseObject []Locations
+		var responseObject Locations
 	
 		err = json.Unmarshal(responseData, &responseObject)
 		if err != nil {
 		fmt.Println(err)
 			}
 		//fmt.Printf("%+v\n", responseObject)
-		//fmt.Println(responseObject)
+		fmt.Println(responseObject.Index[23])
 
-	// 	 for i := 0; i < len(responseObject); i++ {
-    //    	 fmt.Println(responseObject[i].LocationSpot())
+	// 	 for i := 0; i < len(responseObject.Index); i++ {
+    //    	 fmt.Println(responseObject.Index[i])
     //  }
 	}
 
@@ -134,10 +124,10 @@ func dates(){
 		fmt.Println(err)
 			}
 		//fmt.Printf("%+v\n", responseObject)
-		fmt.Println(responseObject)
+		fmt.Println(responseObject.Index[23])
 
-	// 	 for i := 0; i < len(responseObject); i++ {
-    //    	 fmt.Println(responseObject[i].BandName())
+	// 	 for i := 0; i < len(responseObject.Index); i++ {
+    //    	 fmt.Println(responseObject.Index[i])
     //  }
 	}
 
@@ -164,10 +154,10 @@ func relation() {
 		fmt.Println(err)
 			}
 		//fmt.Printf("%+v\n", responseObject)
-		fmt.Println(responseObject)
+		fmt.Println(responseObject.Index[23])
 
-	// 	 for i := 0; i < len(responseObject); i++ {
-    //    	 fmt.Println(responseObject[i].RelationData())
+	// 	 for i := 0; i < len(responseObject.Index); i++ {
+    //    	 fmt.Println(responseObject.Index[i])
     //  }
 	}
 
@@ -175,7 +165,7 @@ func relation() {
 
 func main (){
 	artists()
-	//locations()
-	//dates()
-	//relation()
+	locations()
+	dates()
+	relation()
 }
