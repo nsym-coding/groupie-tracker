@@ -8,8 +8,6 @@ import ("fmt"
 		"net/http"
 )
 
-// type Groupie struct{ 
-
 type Artists struct {
 
 	ID           int      `json:"id"`
@@ -23,26 +21,36 @@ type Artists struct {
 	Relations    string   `json:"relations"`
 }
 
+func (a Artists) BandName() (string, []string, int) {
+	return a.Name, a.Members, a.CreationDate
+
+}
+
 type Locations struct {
-	Index []struct {
 		ID        int      `json:"id"`
 		Locations []string `json:"locations"`
-		Dates     string   `json:"dates"`
-	} `json:"index"`
+}
+
+type IndexLocations struct {
+	Index []Locations `json:"index"`
 }
 
 type Dates struct {
-	Index []struct {
 		ID    int      `json:"id"`
 		Dates []string `json:"dates"`
-	} `json:"index"`
+}
+
+type IndexDates struct {
+	Index []Dates `json:"index"`
 }
 
 type Relations struct {
-	Index []struct{
 		ID int 			`json:"id"`
 		DatesLocations map[string][]string 	`json:"DatesLocations`
-	}
+}
+
+type IndexRelations struct {
+	Index []Relations `json:"index"`
 }
 
 // }
@@ -52,7 +60,7 @@ func main() {
 			fmt.Print(err.Error())
 			os.Exit(1)
 		}
-	
+		
 		responseData, err := ioutil.ReadAll(response.Body)
 		if err != nil {
 			log.Fatal(err)
@@ -67,9 +75,9 @@ func main() {
 		fmt.Println(err)
 			}
 		//fmt.Printf("%+v\n", responseObject)
-		fmt.Println(responseObject)
+		//fmt.Println(responseObject)
 
-	// 	 for i := 0; i < len(responseObject.Artists); i++ {
-    //    	 fmt.Println(responseObject.Artists[i])
-    //  }
+		 for i := 0; i < len(responseObject); i++ {
+       	 fmt.Println(responseObject[i].BandName())
+     }
 	}
