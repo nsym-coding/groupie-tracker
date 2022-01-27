@@ -2,11 +2,23 @@ package main
 
 import ("fmt"
 		"encoding/json"
+		"html/template"
 		"log"
 		"os"
 		"io/ioutil"
 		"net/http"
 )
+
+/*This var is a pointer towards template.Template that is a
+pointer to help process the html.*/
+var tpl *template.Template
+
+/*This init function, once it's initialised, makes it so that each html file
+in the templates folder is parsed i.e. they all get looked through once and
+then stored in the memory ready to go when needed*/
+func init() {
+	tpl = template.Must(template.ParseGlob("templates/*html"))
+}
 
 type Artists struct {
 
@@ -161,9 +173,29 @@ func relation() {
     //  }
 	}
 
+//Handler function for the index
+func home(w http.ResponseWriter, r *http.Request) {
 
+		if r.URL.Path != "/" {
+			http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
+		} else {
+
+			//a:= "https://groupietrackers.herokuapp.com/api/images/queen.jpeg"
+			
+			tpl.ExecuteTemplate(w, "home.html", nil)
+		}
+	}
+
+func requests() {
+		fs := http.FileServer(http.Dir("./templates"))
+	
+		http.Handle("/", fs)
+		http.HandleFunc("/home.html", home)
+		http.ListenAndServe(":8080", nil)
+}
 
 func main (){
+	requests()
 	artists()
 	locations()
 	dates()
