@@ -59,7 +59,7 @@ type Relations struct {
 } `json:"index`
 	}
 
-func artists() {
+func artists(w http.ResponseWriter, r *http.Request) {
 		response, err := http.Get("https://groupietrackers.herokuapp.com/api/artists")
 		if err != nil {
 			fmt.Print(err.Error())
@@ -85,6 +85,12 @@ func artists() {
 	// 	 for i := 0; i < len(responseObject); i++ {
     //    	 fmt.Println(responseObject[i].BandName())
     //  }
+	if r.URL.Path != "/home" {
+		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
+	} else {
+		
+		tpl.ExecuteTemplate(w, "home.html", responseObject)
+	}
 	}
 
 func locations() {
@@ -173,31 +179,18 @@ func relation() {
     //  }
 	}
 
-//Handler function for the index
-func home(w http.ResponseWriter, r *http.Request) {
-
-		if r.URL.Path != "/" {
-			http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
-		} else {
-
-			//a:= "https://groupietrackers.herokuapp.com/api/images/queen.jpeg"
-			
-			tpl.ExecuteTemplate(w, "home.html", nil)
-		}
-	}
-
 func requests() {
 		fs := http.FileServer(http.Dir("./templates"))
 	
 		http.Handle("/", fs)
-		http.HandleFunc("/home.html", home)
+		http.HandleFunc("/home", artists)
 		http.ListenAndServe(":8080", nil)
 }
 
 func main (){
 	requests()
-	artists()
-	locations()
-	dates()
-	relation()
+	//artists()
+	// locations()
+	// dates()
+	// relation()
 }
