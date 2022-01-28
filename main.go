@@ -80,11 +80,11 @@ func artists(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 			}
 		//fmt.Printf("%+v\n", responseObject)
-		fmt.Println(responseObject[23])
+		//fmt.Println(responseObject[23])
 
-	// 	 for i := 0; i < len(responseObject); i++ {
-    //    	 fmt.Println(responseObject[i].BandName())
-    //  }
+		 for i := 0; i < len(responseObject); i++ {
+       	 fmt.Println(responseObject[i].BandName())
+     }
 	if r.URL.Path != "/home" {
 		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
 	} else {
@@ -142,11 +142,11 @@ func dates(){
 		fmt.Println(err)
 			}
 		//fmt.Printf("%+v\n", responseObject)
-		fmt.Println(responseObject.Index[23])
+		//fmt.Println(responseObject.Index[23])
 
-	// 	 for i := 0; i < len(responseObject.Index); i++ {
-    //    	 fmt.Println(responseObject.Index[i])
-    //  }
+		 for i := 0; i < len(responseObject.Index); i++ {
+       	 fmt.Println(responseObject.Index[i])
+     }
 	}
 
 func relation() {
