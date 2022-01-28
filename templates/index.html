@@ -17,7 +17,9 @@
     
 
    
-    {{range $v := .ArtistImage}}{{$v}}{{end}}
+    {{range . }} 
+<img src="{{.Image}}" alt="Album Cover" width="250" height="300">
+    {{end}}
 
 
 </body>
