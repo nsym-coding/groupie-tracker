@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"html/template"
 	"io/ioutil"
+	"log"
 	"net/http"
 )
 
@@ -20,15 +21,15 @@ func init() {
 }
 
 var (
-	artistID              []int
-	artistImage           []string
-	artistName            []string
-	artistMembers         []string
-	artistCreationDate    []int
-	artistFirstAlbum      []string
-	artistLocations       []string
-	artistConcertDates    []string
-	artistsDatesLocations map[string][]string
+	ArtistID              []int
+	ArtistImage           []string
+	ArtistName            []string
+	ArtistMembers         []string
+	ArtistCreationDate    []int
+	ArtistFirstAlbum      []string
+	ArtistLocations       []string
+	ArtistConcertDates    []string
+	ArtistsDatesLocations map[string][]string
 )
 
 type Artists []struct {
@@ -65,16 +66,16 @@ type Relation struct {
 	} `json:"index"`
 }
 
-func artistsData(string) {
-	response, err := http.Get("https://groupietrackers.herokuapp.com/api/artists")
+func ArtistsData(string) {
+	response, err := http.Get("https://groupietrackers.herokuapp.com/api/Artists")
 	if err != nil {
-		panic("Couldn't get info for artists!")
+		panic("Couldn't get info for Artists!")
 	}
 	defer response.Body.Close()
 
 	responseData, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		panic("Couldn't read data for artists!")
+		panic("Couldn't read data for Artists!")
 	}
 
 	var responseObject Artists
@@ -82,51 +83,51 @@ func artistsData(string) {
 
 	for i := 0; i < len(responseObject); i++ {
 
-		artistID = append(artistID, responseObject[i].ID)
+		ArtistID = append(ArtistID, responseObject[i].ID)
 	}
 
 	for i := 0; i < len(responseObject); i++ {
 
-		artistImage = append(artistImage, responseObject[i].Image)
+		ArtistImage = append(ArtistImage, responseObject[i].Image)
 	}
 	for i := 0; i < len(responseObject); i++ {
 
-		artistName = append(artistName, responseObject[i].Name)
+		ArtistName = append(ArtistName, responseObject[i].Name)
 	}
 	for i := 0; i < len(responseObject); i++ {
 
-		artistMembers = append(artistMembers, responseObject[i].Members...)
+		ArtistMembers = append(ArtistMembers, responseObject[i].Members...)
 	}
 	for i := 0; i < len(responseObject); i++ {
 
-		artistCreationDate = append(artistCreationDate, responseObject[i].CreationDate)
+		ArtistCreationDate = append(ArtistCreationDate, responseObject[i].CreationDate)
 	}
 	for i := 0; i < len(responseObject); i++ {
 
-		artistFirstAlbum = append(artistFirstAlbum, responseObject[i].FirstAlbum)
+		ArtistFirstAlbum = append(ArtistFirstAlbum, responseObject[i].FirstAlbum)
 	}
 	for i := 0; i < len(responseObject); i++ {
 
-		artistLocations = append(artistLocations, responseObject[i].Locations)
+		ArtistLocations = append(ArtistLocations, responseObject[i].Locations)
 	}
 	for i := 0; i < len(responseObject); i++ {
 
-		artistConcertDates = append(artistConcertDates, responseObject[i].ConcertDates)
+		ArtistConcertDates = append(ArtistConcertDates, responseObject[i].ConcertDates)
 	}
-	//fmt.Println(artistName[0])
+	//fmt.Println(ArtistName[0])
 
 }
 
 func main() {
 	response, err := http.Get("https://groupietrackers.herokuapp.com/api/artists")
 	if err != nil {
-		panic("Couldn't get info for artists!")
+		panic("Couldn't get info for Artists!")
 	}
 	defer response.Body.Close()
 
 	responseData, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		panic("Couldn't read data for artists!")
+		panic("Couldn't read data for Artists!")
 	}
 
 	var responseObject Artists
@@ -134,39 +135,39 @@ func main() {
 
 	for i := 0; i < len(responseObject); i++ {
 
-		artistID = append(artistID, responseObject[i].ID)
+		ArtistID = append(ArtistID, responseObject[i].ID)
 	}
 
 	for i := 0; i < len(responseObject); i++ {
 
-		artistImage = append(artistImage, responseObject[i].Image)
+		ArtistImage = append(ArtistImage, responseObject[i].Image)
 	}
 	for i := 0; i < len(responseObject); i++ {
 
-		artistName = append(artistName, responseObject[i].Name)
+		ArtistName = append(ArtistName, responseObject[i].Name)
 	}
 	for i := 0; i < len(responseObject); i++ {
 
-		artistMembers = append(artistMembers, responseObject[i].Members...)
+		ArtistMembers = append(ArtistMembers, responseObject[i].Members...)
 	}
 	for i := 0; i < len(responseObject); i++ {
 
-		artistCreationDate = append(artistCreationDate, responseObject[i].CreationDate)
+		ArtistCreationDate = append(ArtistCreationDate, responseObject[i].CreationDate)
 	}
 	for i := 0; i < len(responseObject); i++ {
 
-		artistFirstAlbum = append(artistFirstAlbum, responseObject[i].FirstAlbum)
+		ArtistFirstAlbum = append(ArtistFirstAlbum, responseObject[i].FirstAlbum)
 	}
 	for i := 0; i < len(responseObject); i++ {
 
-		artistLocations = append(artistLocations, responseObject[i].Locations)
+		ArtistLocations = append(ArtistLocations, responseObject[i].Locations)
 	}
 	for i := 0; i < len(responseObject); i++ {
 
-		artistConcertDates = append(artistConcertDates, responseObject[i].ConcertDates)
+		ArtistConcertDates = append(ArtistConcertDates, responseObject[i].ConcertDates)
 	}
 
-	//fmt.Println(artistImage[0:5])
+	fmt.Println(ArtistImage[0:5])
 	requests()
 
 }
@@ -177,13 +178,31 @@ func requests() {
 	http.Handle("/", fs)
 	http.HandleFunc("/index.html", index)
 	http.ListenAndServe(":8080", nil)
+	log.Println("Server started on: http://localhost:8080")
 }
 func index(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(artistImage[0:5])
+	response, err := http.Get("https://groupietrackers.herokuapp.com/api/artists")
+	if err != nil {
+		panic("Couldn't get info for Artists!")
+	}
+	defer response.Body.Close()
+
+	responseData, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		panic("Couldn't read data for Artists!")
+	}
+
+	var responseObject Artists
+	json.Unmarshal(responseData, &responseObject)
+
+	for i := 0; i < len(responseObject); i++ {
+
+		ArtistImage = append(ArtistImage, responseObject[i].Image)
+	}
 	if r.URL.Path != "/" {
 		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
 	} else {
 
-		tpl.ExecuteTemplate(w, "index.html", artistImage)
+		tpl.ExecuteTemplate(w, "index.html", ArtistImage)
 	}
 }
