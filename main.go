@@ -66,7 +66,7 @@ type Relation struct {
 	} `json:"index"`
 }
 
-// func ArtistsData(string) {
+// func ArtistsData() {
 // 	response, err := http.Get("https://groupietrackers.herokuapp.com/api/Artists")
 // 	if err != nil {
 // 		panic("Couldn't get info for Artists!")
@@ -119,57 +119,77 @@ type Relation struct {
 // }
 
 func main() {
-	response, err := http.Get("https://groupietrackers.herokuapp.com/api/artists")
+
+	// response, err := http.Get("https://groupietrackers.herokuapp.com/api/artists")
+	// if err != nil {
+	// 	panic("Couldn't get info for Artists!")
+	// }
+	// defer response.Body.Close()
+
+	// responseData, err := ioutil.ReadAll(response.Body)
+	// if err != nil {
+	// 	panic("Couldn't read data for Artists!")
+	// }
+
+	// var responseObject Artists
+	// json.Unmarshal(responseData, &responseObject)
+	// //fmt.Println(responseObject)
+
+	// for i := 0; i < len(responseObject); i++ {
+
+	// 	ArtistID = append(ArtistID, responseObject[i].ID)
+	// }
+
+	// for i := 0; i < len(responseObject); i++ {
+
+	// 	ArtistImage = append(ArtistImage, responseObject[i].Image)
+	// }
+	// for i := 0; i < len(responseObject); i++ {
+
+	// 	ArtistName = append(ArtistName, responseObject[i].Name)
+	// }
+	// for i := 0; i < len(responseObject); i++ {
+
+	// 	ArtistMembers = append(ArtistMembers, responseObject[i].Members...)
+	// }
+	// for i := 0; i < len(responseObject); i++ {
+
+	// 	ArtistCreationDate = append(ArtistCreationDate, responseObject[i].CreationDate)
+	// }
+	// for i := 0; i < len(responseObject); i++ {
+
+	// 	ArtistFirstAlbum = append(ArtistFirstAlbum, responseObject[i].FirstAlbum)
+	// }
+	// for i := 0; i < len(responseObject); i++ {
+
+	// 	ArtistLocations = append(ArtistLocations, responseObject[i].Locations)
+	// }
+	// for i := 0; i < len(responseObject); i++ {
+
+	// 	ArtistConcertDates = append(ArtistConcertDates, responseObject[i].ConcertDates)
+	// }
+
+	// //fmt.Println(ArtistImage[0:1])
+	requests()
+
+	response, err := http.Get("https://groupietrackers.herokuapp.com/api/relation")
 	if err != nil {
-		panic("Couldn't get info for Artists!")
+		panic("Couldn't get the relations data!")
 	}
-	defer response.Body.Close()
 
 	responseData, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		panic("Couldn't read data for Artists!")
+		panic("Couldn't read data for the Artists")
 	}
 
-	var responseObject Artists
+	var responseObject Relation
+
 	json.Unmarshal(responseData, &responseObject)
-	//fmt.Println(responseObject)
+	fmt.Println(responseObject.Index[50])
 
-	for i := 0; i < len(responseObject); i++ {
-
-		ArtistID = append(ArtistID, responseObject[i].ID)
+	for i := 0; i < len(responseObject.Index); i++ {
+		fmt.Print(responseObject.Index[i])
 	}
-
-	for i := 0; i < len(responseObject); i++ {
-
-		ArtistImage = append(ArtistImage, responseObject[i].Image)
-	}
-	for i := 0; i < len(responseObject); i++ {
-
-		ArtistName = append(ArtistName, responseObject[i].Name)
-	}
-	for i := 0; i < len(responseObject); i++ {
-
-		ArtistMembers = append(ArtistMembers, responseObject[i].Members...)
-	}
-	for i := 0; i < len(responseObject); i++ {
-
-		ArtistCreationDate = append(ArtistCreationDate, responseObject[i].CreationDate)
-	}
-	for i := 0; i < len(responseObject); i++ {
-
-		ArtistFirstAlbum = append(ArtistFirstAlbum, responseObject[i].FirstAlbum)
-	}
-	for i := 0; i < len(responseObject); i++ {
-
-		ArtistLocations = append(ArtistLocations, responseObject[i].Locations)
-	}
-	for i := 0; i < len(responseObject); i++ {
-
-		ArtistConcertDates = append(ArtistConcertDates, responseObject[i].ConcertDates)
-	}
-
-	//fmt.Println(ArtistImage[0:1])
-	requests()
 
 }
 
@@ -177,7 +197,8 @@ func requests() {
 	fs := http.FileServer(http.Dir("./templates"))
 
 	http.Handle("/", fs)
-	http.HandleFunc("/index.html", index)
+	http.HandleFunc("/home", index)
+	http.HandleFunc("/info", artistInfo)
 	http.ListenAndServe(":8080", nil)
 	log.Println("Server started on: http://localhost:8080")
 }
@@ -201,10 +222,40 @@ func index(w http.ResponseWriter, r *http.Request) {
 
 		ArtistImage = append(ArtistImage, responseObject[i].Image)
 	}
-	if r.URL.Path != "/index.html" {
+
+	if r.URL.Path != "/home" {
 		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
 	} else {
 
 		tpl.ExecuteTemplate(w, "index.html", responseObject)
 	}
+}
+
+func artistInfo(w http.ResponseWriter, r *http.Request) {
+
+	response, err := http.Get("https://groupietrackers.herokuapp.com/api/relation")
+	if err != nil {
+		panic("Couldn't get the relations data!")
+	}
+
+	responseData, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		panic("Couldn't read data for the Artists")
+	}
+
+	var responseObject Relation
+
+	json.Unmarshal(responseData, &responseObject)
+	//fmt.Println(responseObject)
+	for i := 0; i < len(responseObject.Index); i++ {
+		fmt.Println(responseObject.Index[i])
+	}
+
+	if r.URL.Path != "/info" {
+		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
+	} else {
+
+		tpl.ExecuteTemplate(w, "info.html", responseObject.Index)
+	}
+
 }
