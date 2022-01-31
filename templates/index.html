@@ -9,20 +9,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Document</title>
+    <!-- <link rel="stylesheet" href="/css/mystyle.css"> -->
 
 </head>
 
 <body>
-
+    {{range . }} 
+    <div class="row">
+        <div class="column">    
+        <img src="{{.Image}}">
+        
+        <h4>Band: {{.Name}}</h4>
+        <h4>Formed in: {{.CreationDate}}</h4>
+        
+            {{end}}
+      
+          
+        </div>
+      </div>
     
+           
+        
 
    
-    {{range . }} 
-<img src="{{.Image}}" alt="Album Cover" width="250" height="300">
-{{.Name}}
-{{.Members}}
-{{.CreationDate}}
-    {{end}}
+   
 
 
 </body>
