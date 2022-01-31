@@ -8,17 +8,20 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Document</title>
-    <!-- <link rel="stylesheet" href="/css/mystyle.css"> -->
+    <title>Index</title>
+    <link rel="stylesheet" href="/css/mystyle.css">
 
 </head>
 
 <body>
+
+    <form action="/info" method="POST">
+
     {{range . }} 
     <div class="row">
         <div class="column">    
-        <img src="{{.Image}}">
-        
+       <button><img src="{{.Image}}"></button> 
+        <div class="text-block">
         <h4>Band: {{.Name}}</h4>
         <h4>Formed in: {{.CreationDate}}</h4>
         
@@ -29,7 +32,7 @@
       </div>
     
            
-        
+    </form>
 
    
    
