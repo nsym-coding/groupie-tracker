@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html>
 
 <head>
 
     <meta charset="UTF-8">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
 
     <title>Index</title>
     <link rel="stylesheet" href="/css/mystyle.css">
@@ -18,18 +18,21 @@
     <form action="/info" method="POST">
 
     {{range . }} 
-    <div class="row">
-        <div class="column">    
-       <button><img src="{{.Image}}"></button> 
-        <div class="text-block">
-        <h4>Band: {{.Name}}</h4>
-        <h4>Formed in: {{.CreationDate}}</h4>
+       <!-- <figure> -->
+       <button><img src="{{.Image}}" alt="Band Picture" width="175" height="210" ali ></button>
         
-            {{end}}
+        <!-- <figcaption>Band: {{.Name}}</figcaption>
+        <figcaption>Formed in: {{.CreationDate}}</figcaption>  -->
+        
+        
+        
+        
+        {{end}}
+        
+        <!-- <figure> -->
       
+            
           
-        </div>
-      </div>
     
            
     </form>
