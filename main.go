@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -23,7 +24,7 @@ var (
 	ArtistID              []int
 	ArtistImage           []string
 	ArtistName            []string
-	ArtistMembers         []string
+	ArtistMembers         [][]string
 	ArtistCreationDate    []int
 	ArtistFirstAlbum      []string
 	ArtistLocations       []string
@@ -31,7 +32,7 @@ var (
 	ArtistsDatesLocations map[string][]string
 )
 
-type Artists []struct {
+type Artists struct {
 	ID           int      `json:"id"`
 	Image        string   `json:"image"`
 	Name         string   `json:"name"`
@@ -43,6 +44,12 @@ type Artists []struct {
 	Relations    string   `json:"relations"`
 }
 
+type Dates struct {
+	Index []struct {
+		ID    int    `json:"id"`
+		Dates string `json:"dates"`
+	} `json:"index"`
+}
 type Locations struct {
 	Index []struct {
 		ID        int      `json:"id"`
@@ -51,53 +58,111 @@ type Locations struct {
 	} `json:"index"`
 }
 
-type Dates struct {
-	Index []struct {
-		ID    int      `json:"id"`
-		Dates []string `json:"dates"`
-	} `json:"index"`
+type Relation struct {
+	Relation []relations `json:"index"`
 }
 
-type Relation struct {
-	Index []struct {
-		ID             int                 `json:"id"`
-		DatesLocations map[string][]string `json:"datesLocations"`
-	} `json:"index"`
+type relations struct {
+	ID             int                 `json:"id"`
+	DatesLocations map[string][]string `json:"datesLocations"`
 }
 
 func main() {
 
-	requests()
+	//requests()
+
+	response, err := http.Get("https://groupietrackers.herokuapp.com/api/relation")
+	if err != nil {
+		panic("Couldn't get the relations data!")
+	}
+
+	responseData, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		panic("Couldn't read data for the Artists")
+	}
+
+	var responseObject Relation
+
+	json.Unmarshal(responseData, &responseObject)
+
+	//for i := 0; i < len(responseObject.Relation); i++ {
+	fmt.Println(responseObject.Relation[0].DatesLocations)
+	//}
 
 }
 
 func requests() {
-	
+
 	http.HandleFunc("/", index)
 	http.HandleFunc("/info", artistInfo)
 	http.ListenAndServe(":8080", nil)
 	log.Println("Server started on: http://localhost:8080")
 }
 func index(w http.ResponseWriter, r *http.Request) {
-	response, err := http.Get("https://groupietrackers.herokuapp.com/api/artists")
-	if err != nil {
-		panic("Couldn't get info for Artists!")
-	}
-	defer response.Body.Close()
 
-	responseData, err := ioutil.ReadAll(response.Body)
+	//--------------Unmarshall Artists-------------------
+	responseArtists, err := http.Get("https://groupietrackers.herokuapp.com/api/artists")
+	if err != nil {
+		panic("Couldn't get Artists info from API")
+	}
+	defer responseArtists.Body.Close()
+
+	responseArtistsData, err := ioutil.ReadAll(responseArtists.Body)
 	if err != nil {
 		panic("Couldn't read data for Artists!")
 	}
 
-	var responseObject Artists
-	json.Unmarshal(responseData, &responseObject)
+	var responseObjectArtists Artists
+	json.Unmarshal(responseArtistsData, &responseObjectArtists)
+
+	//--------------Unmarshall Locations-------------------
+
+	responseLocations, err := http.Get("https://groupietrackers.herokuapp.com/api/locations")
+	if err != nil {
+		panic("Couldn't get Location info from API")
+	}
+	defer responseLocations.Body.Close()
+
+	responseLocationsData, err := ioutil.ReadAll(responseLocations.Body)
+	if err != nil {
+		panic("Couldn't read data for Locations!")
+	}
+
+	var responseObjectLocations []Locations
+	json.Unmarshal(responseLocationsData, &responseObjectLocations)
+
+	for i := 0; i < len(responseObjectLocations); i++ {
+		fmt.Println(responseObjectLocations[i])
+	}
+
+	//--------------Unmarshall Dates-------------------
+	responseDates, err := http.Get("https://groupietrackers.herokuapp.com/api/dates")
+	if err != nil {
+		panic("Couldn't get Dates info from the API!")
+	}
+	defer responseDates.Body.Close()
+
+	responseDatesData, err := ioutil.ReadAll(responseDates.Body)
+	if err != nil {
+		panic("Couldn't read data for Dates")
+	}
+
+	var responseObjectDates Dates
+	json.Unmarshal(responseDatesData, &responseObjectDates)
+
+	//-------------Create a struct to hold unmarshalled data-----------
+
+	// var TotalInfo []struct {
+	// 	responseObjectArtists   Artists
+	// 	responseObjectLocations Locations.Index
+	// 	responseObjectDates     Dates
+	// }
 
 	if r.URL.Path != "/" {
 		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
 	} else {
 
-		tpl.ExecuteTemplate(w, "index.html", responseObject)
+		tpl.ExecuteTemplate(w, "index.html", responseObjectArtists)
 	}
 }
 
@@ -121,7 +186,7 @@ func artistInfo(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
 	} else {
 
-		tpl.ExecuteTemplate(w, "info.html", responseObject.Index)
+		//tpl.ExecuteTemplate(w, "info.html", responseObject.Index)
 	}
 
 }
