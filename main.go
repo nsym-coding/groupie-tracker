@@ -28,11 +28,11 @@ var (
 	ArtistCreationDate    []int
 	ArtistFirstAlbum      []string
 	ArtistLocations       [][]string
-	ArtistConcertDates    []string
+	ArtistConcertDates    [][]string
 	ArtistsDatesLocations map[string][]string
 )
 
-type Artists struct {
+type Artists []struct {
 	ID           int      `json:"id"`
 	Image        string   `json:"image"`
 	Name         string   `json:"name"`
@@ -49,8 +49,8 @@ type Dates struct {
 }
 
 type dates struct {
-	ID    int    `json:"id"`
-	Dates string `json:"dates"`
+	ID    int      `json:"id"`
+	Dates []string `json:"dates"`
 }
 type Locations struct {
 	Locations []locations `json:"index"`
@@ -73,73 +73,106 @@ type relations struct {
 
 func main() {
 
+	// responseArtists, err := http.Get("https://groupietrackers.herokuapp.com/api/artists")
+	// if err != nil {
+	// 	panic("Couldn't get Artists info from API")
+	// }
+	// defer responseArtists.Body.Close()
+
+	// responseArtistsData, err := ioutil.ReadAll(responseArtists.Body)
+	// if err != nil {
+	// 	panic("Couldn't read data for Artists!")
+	// }
+
+	// var responseObjectArtists Artists
+	// json.Unmarshal(responseArtistsData, &responseObjectArtists)
+
+	// for i := 0; i < len(responseObjectArtists); i++ {
+	// 	ArtistLocations = append(ArtistLocations, responseObjectArtists[i].Locations)
+	// }
+
+	// fmt.Println(ArtistLocations[0])
+
 	//requests()
 
-	response, err := http.Get("https://groupietrackers.herokuapp.com/api/relation")
+	responseRelations, err := http.Get("https://groupietrackers.herokuapp.com/api/relation")
 	if err != nil {
 		panic("Couldn't get the relations data!")
 	}
 
-	responseData, err := ioutil.ReadAll(response.Body)
+	responseData, err := ioutil.ReadAll(responseRelations.Body)
 	if err != nil {
 		panic("Couldn't read data for the Artists")
 	}
 
-	var responseObject Relation
+	var responseObjectRelation Relation
 
-	json.Unmarshal(responseData, &responseObject)
+	json.Unmarshal(responseData, &responseObjectRelation)
 
-	responseLocations, err := http.Get("https://groupietrackers.herokuapp.com/api/locations")
-	if err != nil {
-		panic("Couldn't get Location info from API")
-	}
-	defer responseLocations.Body.Close()
+	ArtistsDatesLocations := responseObjectRelation.Relation
 
-	responseLocationsData, err := ioutil.ReadAll(responseLocations.Body)
-	if err != nil {
-		panic("Couldn't read data for Locations!")
+	for i := 0; i < len(ArtistsDatesLocations); i++ {
+
+		fmt.Println(ArtistsDatesLocations[i])
 	}
 
-	var responseObjectLocations Locations
-	json.Unmarshal(responseLocationsData, &responseObjectLocations)
-
-	//fmt.Println(responseObjectLocations.Locations[0].Locations)
-
-	for i := 0; i < len(responseObjectLocations.Locations); i++ {
-		ArtistLocations = append(ArtistLocations, responseObjectLocations.Locations[i].Locations)
-	}
-
-	for i := 0; i < len(responseObjectLocations.Locations); i++ {
-		ArtistID = append(ArtistID, responseObjectLocations.Locations[i].ID)
-	}
-
-	// for i := 0; i < len(ArtistLocations); i++ {
-	// 	fmt.Println(ArtistID[i], ArtistLocations[i])
+	// for i:= 0; i<len(responseObjectRelation.Relation); i++{
+	// 	ArtistsDatesLocations = append(ArtistsDatesLocations, responseObjectRelation.Relation[i])
 	// }
 
-	responseDates, err := http.Get("https://groupietrackers.herokuapp.com/api/dates")
-	if err != nil {
-		panic("Couldn't get Dates info from the API!")
-	}
-	defer responseDates.Body.Close()
+	// responseLocations, err := http.Get("https://groupietrackers.herokuapp.com/api/locations")
+	// if err != nil {
+	// 	panic("Couldn't get Location info from API")
+	// }
+	// defer responseLocations.Body.Close()
 
-	responseDatesData, err := ioutil.ReadAll(responseDates.Body)
-	if err != nil {
-		panic("Couldn't read data for Dates")
-	}
+	// responseLocationsData, err := ioutil.ReadAll(responseLocations.Body)
+	// if err != nil {
+	// 	panic("Couldn't read data for Locations!")
+	// }
 
-	var responseObjectDates Dates
-	json.Unmarshal(responseDatesData, &responseObjectDates)
+	// var responseObjectLocations Locations
+	// json.Unmarshal(responseLocationsData, &responseObjectLocations)
 
-	for i := 0; i < len(responseObjectDates.Dates); i++ {
-		ArtistConcertDates = append(ArtistConcertDates, responseObjectDates.Dates[i].Dates)
-	}
+	// //fmt.Println(responseObjectLocations.Locations[0].Locations)
 
-	for i := 0; i < len(ArtistConcertDates); i++ {
-		fmt.Println(ArtistConcertDates[i])
-	}
+	// for i := 0; i < len(responseObjectLocations.Locations); i++ {
+	// 	ArtistLocations = append(ArtistLocations, responseObjectLocations.Locations[i].Locations)
+	// }
 
-	//fmt.Println(ArtistConcertDates[0])
+	// fmt.Println(ArtistLocations[0])
+
+	// for i := 0; i < len(responseObjectLocations.Locations); i++ {
+	// 	ArtistID = append(ArtistID, responseObjectLocations.Locations[i].ID)
+	// }
+
+	// // for i := 0; i < len(ArtistLocations); i++ {
+	// // 	fmt.Println(ArtistID[i], ArtistLocations[i])
+	// // }
+
+	// responseDates, err := http.Get("https://groupietrackers.herokuapp.com/api/dates")
+	// if err != nil {
+	// 	panic("Couldn't get Dates info from the API!")
+	// }
+	// defer responseDates.Body.Close()
+
+	// responseDatesData, err := ioutil.ReadAll(responseDates.Body)
+	// if err != nil {
+	// 	panic("Couldn't read data for Dates")
+	// }
+
+	// var responseObjectDates Dates
+	// json.Unmarshal(responseDatesData, &responseObjectDates)
+
+	// for i := 0; i < len(responseObjectDates.Dates); i++ {
+	// 	ArtistConcertDates = append(ArtistConcertDates, responseObjectDates.Dates[i].Dates)
+	// }
+
+	// // for i := 0; i < len(ArtistConcertDates); i++ {
+	// // 	fmt.Println(ArtistConcertDates[i])
+	// // }
+
+	// fmt.Println(ArtistConcertDates[1])
 
 }
 
@@ -164,8 +197,12 @@ func index(w http.ResponseWriter, r *http.Request) {
 		panic("Couldn't read data for Artists!")
 	}
 
-	var responseObjectArtists Artists
+	var responseObjectArtists []Artists
 	json.Unmarshal(responseArtistsData, &responseObjectArtists)
+
+	for i := 0; i < len(responseObjectArtists); i++ {
+		ArtistID = append(ArtistID, ArtistID[i])
+	}
 
 	//--------------Unmarshall Locations-------------------
 
