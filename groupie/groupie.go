@@ -1,4 +1,4 @@
-package main
+package groupie
 
 import (
 	"encoding/json"
@@ -91,8 +91,7 @@ func main() {
 		ArtistCreationDate = append(ArtistCreationDate, responseObjectArtists[i].CreationDate)
 	}
 
-		fmt.Println(ArtistImage[0])
-		fmt.Println(ArtistCreationDate[0])
-
+	fmt.Println(ArtistImage[0])
+	fmt.Println(ArtistCreationDate[0])
 
 }

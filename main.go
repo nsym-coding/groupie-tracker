@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"groupie"
+	"git.learn.01founders.co/nsym_coding/groupie-tracker.git/groupie"
 )
 
 /*This var is a pointer towards template.Template that is a
@@ -74,107 +74,8 @@ type relations struct {
 
 func main() {
 
-	responseArtists, err := http.Get("https://groupietrackers.herokuapp.com/api/artists")
-	if err != nil {
-		panic("Couldn't get Artists info from API")
-	}
-	defer responseArtists.Body.Close()
-
-	responseArtistsData, err := ioutil.ReadAll(responseArtists.Body)
-	if err != nil {
-		panic("Couldn't read data for Artists!")
-	}
-
-	var responseObjectArtists Artists
-	json.Unmarshal(responseArtistsData, &responseObjectArtists)
-
-	// for i := 0; i < len(responseObjectArtists); i++ {
-	// 	ArtistImage = append(ArtistImage, responseObjectArtists[i].Image)
-	// }
-
-	// fmt.Println(ArtistLocations[0])
-
-	//requests()
-
-	responseRelations, err := http.Get("https://groupietrackers.herokuapp.com/api/relation")
-	if err != nil {
-		panic("Couldn't get the relations data!")
-	}
-
-	responseData, err := ioutil.ReadAll(responseRelations.Body)
-	if err != nil {
-		panic("Couldn't read data for the Artists")
-	}
-
-	var responseObjectRelation Relation
-
-	json.Unmarshal(responseData, &responseObjectRelation)
-
-	ArtistsDatesLocations := responseObjectRelation.Relation
-
-	for i := 0; i < len(ArtistsDatesLocations); i++ {
-
-		fmt.Println(ArtistsDatesLocations[i])
-	}
-
-	// for i:= 0; i<len(responseObjectRelation.Relation); i++{
-	// 	ArtistsDatesLocations = append(ArtistsDatesLocations, responseObjectRelation.Relation[i])
-	// }
-
-	// responseLocations, err := http.Get("https://groupietrackers.herokuapp.com/api/locations")
-	// if err != nil {
-	// 	panic("Couldn't get Location info from API")
-	// }
-	// defer responseLocations.Body.Close()
-
-	// responseLocationsData, err := ioutil.ReadAll(responseLocations.Body)
-	// if err != nil {
-	// 	panic("Couldn't read data for Locations!")
-	// }
-
-	// var responseObjectLocations Locations
-	// json.Unmarshal(responseLocationsData, &responseObjectLocations)
-
-	// //fmt.Println(responseObjectLocations.Locations[0].Locations)
-
-	// for i := 0; i < len(responseObjectLocations.Locations); i++ {
-	// 	ArtistLocations = append(ArtistLocations, responseObjectLocations.Locations[i].Locations)
-	// }
-
-	// fmt.Println(ArtistLocations[0])
-
-	// for i := 0; i < len(responseObjectLocations.Locations); i++ {
-	// 	ArtistID = append(ArtistID, responseObjectLocations.Locations[i].ID)
-	// }
-
-	// // for i := 0; i < len(ArtistLocations); i++ {
-	// // 	fmt.Println(ArtistID[i], ArtistLocations[i])
-	// // }
-
-	// responseDates, err := http.Get("https://groupietrackers.herokuapp.com/api/dates")
-	// if err != nil {
-	// 	panic("Couldn't get Dates info from the API!")
-	// }
-	// defer responseDates.Body.Close()
-
-	// responseDatesData, err := ioutil.ReadAll(responseDates.Body)
-	// if err != nil {
-	// 	panic("Couldn't read data for Dates")
-	// }
-
-	// var responseObjectDates Dates
-	// json.Unmarshal(responseDatesData, &responseObjectDates)
-
-	// for i := 0; i < len(responseObjectDates.Dates); i++ {
-	// 	ArtistConcertDates = append(ArtistConcertDates, responseObjectDates.Dates[i].Dates)
-	// }
-
-	// // for i := 0; i < len(ArtistConcertDates); i++ {
-	// // 	fmt.Println(ArtistConcertDates[i])
-	// // }
-
-	// fmt.Println(ArtistConcertDates[1])
-
+	fmt.Println(groupie.ArtistImage[0])
+	fmt.Println(groupie.ArtistCreationDate[0])
 }
 
 func requests() {
