@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"groupie"
 )
 
 /*This var is a pointer towards template.Template that is a
