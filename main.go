@@ -73,22 +73,22 @@ type relations struct {
 
 func main() {
 
-	// responseArtists, err := http.Get("https://groupietrackers.herokuapp.com/api/artists")
-	// if err != nil {
-	// 	panic("Couldn't get Artists info from API")
-	// }
-	// defer responseArtists.Body.Close()
+	responseArtists, err := http.Get("https://groupietrackers.herokuapp.com/api/artists")
+	if err != nil {
+		panic("Couldn't get Artists info from API")
+	}
+	defer responseArtists.Body.Close()
 
-	// responseArtistsData, err := ioutil.ReadAll(responseArtists.Body)
-	// if err != nil {
-	// 	panic("Couldn't read data for Artists!")
-	// }
+	responseArtistsData, err := ioutil.ReadAll(responseArtists.Body)
+	if err != nil {
+		panic("Couldn't read data for Artists!")
+	}
 
-	// var responseObjectArtists Artists
-	// json.Unmarshal(responseArtistsData, &responseObjectArtists)
+	var responseObjectArtists Artists
+	json.Unmarshal(responseArtistsData, &responseObjectArtists)
 
 	// for i := 0; i < len(responseObjectArtists); i++ {
-	// 	ArtistLocations = append(ArtistLocations, responseObjectArtists[i].Locations)
+	// 	ArtistImage = append(ArtistImage, responseObjectArtists[i].Image)
 	// }
 
 	// fmt.Println(ArtistLocations[0])
