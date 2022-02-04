@@ -145,19 +145,25 @@ func UnmarshalDatesLocations() {
 	
 	for _, slice := range responseObjectRelations.Relations {
 		for k, v := range slice.DatesLocations {
+			
+			// ArtistsDatesLocations = make(map[string][]string)
+			// ArtistsDatesLocations[k] = v
+
+			// keys := []string {}
+
+			// for k, _ := range ArtistsDatesLocations {
+			// 	keys = append(keys, k)
+			// }
+		
+			// keys_string := strings.Join(keys, ",")
+		
+			// fmt.Println(keys_string)
+		
 			fmt.Println(k, v)
 		}
 	}
-	// // for k, v := range x {
-	// // 	fmt.Println(k, v)
-	// // }
-	// 	fmt.Println(x)
 
-	// for i := 0; i < len(responseObjectRelations); i++ {
-
-	// 	ArtistsDatesLocations = responseObjectRelations.Relations[i].DatesLocations
-	
-	// }
+	//fmt.Println(ArtistLocations)
 
 //--------------Unmarshall Dates-------------------
 
@@ -178,6 +184,9 @@ func UnmarshalDatesLocations() {
 	for i := 0; i < len(responseObjectDates.Dates); i++ {
 		ArtistConcertDates = append(ArtistConcertDates, responseObjectDates.Dates[i].Dates)
 	}
+
+	//fmt.Println(ArtistConcertDates)
+
 //--------------Unmarshall Locations-------------------
 
 	responseLocations, err := http.Get("https://groupietrackers.herokuapp.com/api/locations")
@@ -194,7 +203,7 @@ func UnmarshalDatesLocations() {
 	var responseObjectLocations Locations
 	json.Unmarshal(responseLocationsData, &responseObjectLocations)
 
-	fmt.Println(responseObjectLocations.Locations[0].Locations)
+	//fmt.Println(responseObjectLocations.Locations[0].Locations)
 	for i := 0; i < len(responseObjectLocations.Locations); i++ {
 		ArtistLocations = append(ArtistLocations, responseObjectLocations.Locations[i].Locations)
 	}
