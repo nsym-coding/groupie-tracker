@@ -32,6 +32,18 @@ var (
 	ArtistsDatesLocations map[string][]string
 )
 
+type TotalInfo struct {
+	ArtistID              []int
+	ArtistImage           []string
+	ArtistName            []string
+	ArtistMembers         [][]string
+	ArtistCreationDate    []int
+	ArtistFirstAlbum      []string
+	ArtistLocations       [][]string
+	ArtistConcertDates    [][]string
+	ArtistsDatesLocations map[string][]string
+}
+
 type Artists []struct {
 	ID           int      `json:"id"`
 	Image        string   `json:"image"`
@@ -74,6 +86,9 @@ type relations struct {
 func main() {
 
 	UnmarshalArtistData()
+	for k, v := range ArtistsDatesLocations[""] {
+		fmt.Println(k, v)
+	}
 
 	fmt.Println(ArtistsDatesLocations["saitama-japan"])
 
