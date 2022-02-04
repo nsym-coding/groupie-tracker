@@ -74,8 +74,10 @@ type relations struct {
 
 func main() {
 
-	fmt.Println(groupie.ArtistImage[0])
-	fmt.Println(groupie.ArtistCreationDate[0])
+groupie.UnmarshalArtistData()
+groupie.UnmarshalDatesLocations()
+
+//requests()
 }
 
 func requests() {
