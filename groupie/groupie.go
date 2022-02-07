@@ -31,22 +31,22 @@ var (
 	ArtistConcertDates    [][]string
 	ArtistsDatesLocations []map[string][]string
 	Artistes              []Artists
-	InfoAll               []TotalInfo
-	Places                Locations
-	Days                  Dates
-	Dlocs                 Relations
+	//InfoAll               []TotalInfo
+	Places Locations
+	Days   Dates
+	Dlocs  Relations
 )
 
-type TotalInfo struct {
-	ArtistID              int
-	ArtistImage           string
-	ArtistName            string
-	ArtistMembers         []string
-	ArtistCreationDate    int
-	ArtistFirstAlbum      string
-	ArtistLocations       []string
-	ArtistConcertDates    []string
-	ArtistsDatesLocations map[string][]string
+var TotalInfo struct {
+	ArtistID              []int
+	ArtistImage           []string
+	ArtistName            []string
+	ArtistMembers         [][]string
+	ArtistCreationDate    []int
+	ArtistFirstAlbum      []string
+	ArtistLocations       [][]string
+	ArtistConcertDates    [][]string
+	ArtistsDatesLocations []map[string][]string
 }
 
 // type TotalInfo []struct {
@@ -103,25 +103,20 @@ type Relations struct {
 func main() {
 
 	UnmarshalArtistData()
-	//FillStruct()
 
-	for i := 0; i < len(ArtistName); i++ {
-		for _, t := range ArtistsDatesLocations {
-			for k, v := range t {
+	for i := 0; i < len(TotalInfo.ArtistCreationDate); i++ {
+		fmt.Println(TotalInfo.ArtistID[i])
+		fmt.Println(TotalInfo.ArtistName[i])
+		fmt.Println(TotalInfo.ArtistCreationDate[i])
+		fmt.Println(TotalInfo.ArtistFirstAlbum[i])
+		fmt.Println(TotalInfo.ArtistMembers[i])
+		fmt.Println(TotalInfo.ArtistConcertDates[i])
+		fmt.Println(TotalInfo.ArtistLocations[i])
+		fmt.Println()
 
-				fmt.Println(k, v)
-				fmt.Println()
-			}
-
-		}
 	}
 
-	// for _, v := range InfoAll {
-	// 	for l, d := range v.ArtistsDatesLocations {
-	// 		fmt.Println(l, d)
-	// 		fmt.Println()
-	// 	}
-	// }
+	//FillStruct()
 
 }
 
@@ -143,27 +138,34 @@ func UnmarshalArtistData() {
 	json.Unmarshal(responseArtistsData, &responseObjectArtists)
 
 	for i := 0; i < len(responseObjectArtists); i++ {
-		ArtistFirstAlbum = append(ArtistFirstAlbum, responseObjectArtists[i].FirstAlbum)
+		TotalInfo.ArtistFirstAlbum = append(TotalInfo.ArtistFirstAlbum, responseObjectArtists[i].FirstAlbum)
+		//fmt.Println(TotalInfo.ArtistFirstAlbum)
 	}
 
 	for i := 0; i < len(responseObjectArtists); i++ {
-		ArtistID = append(ArtistID, responseObjectArtists[i].ID)
+		TotalInfo.ArtistID = append(TotalInfo.ArtistID, responseObjectArtists[i].ID)
+		//fmt.Println(TotalInfo.ArtistID)
 	}
 
 	for i := 0; i < len(responseObjectArtists); i++ {
-		ArtistImage = append(ArtistImage, responseObjectArtists[i].Image)
+		TotalInfo.ArtistImage = append(TotalInfo.ArtistImage, responseObjectArtists[i].Image)
+
 	}
 
 	for i := 0; i < len(responseObjectArtists); i++ {
-		ArtistMembers = append(ArtistMembers, responseObjectArtists[i].Members)
+		TotalInfo.ArtistMembers = append(TotalInfo.ArtistMembers, responseObjectArtists[i].Members)
+		//fmt.Println(TotalInfo.ArtistMembers[i])
+
 	}
 
 	for i := 0; i < len(responseObjectArtists); i++ {
-		ArtistCreationDate = append(ArtistCreationDate, responseObjectArtists[i].CreationDate)
+		TotalInfo.ArtistCreationDate = append(TotalInfo.ArtistCreationDate, responseObjectArtists[i].CreationDate)
+		//fmt.Println(TotalInfo.ArtistCreationDate)
+
 	}
 
 	for i := 0; i < len(responseObjectArtists); i++ {
-		ArtistName = append(ArtistName, responseObjectArtists[i].Name)
+		TotalInfo.ArtistName = append(TotalInfo.ArtistName, responseObjectArtists[i].Name)
 	}
 
 	responseRelations, err := http.Get("https://groupietrackers.herokuapp.com/api/relation")
@@ -180,14 +182,14 @@ func UnmarshalArtistData() {
 
 	json.Unmarshal(responseData, &responseObjectRelations)
 
-	for i := 0; i < 52; i++ {
-		for y, v := range responseObjectRelations.Index[i].DatesLocations {
+	// for i := 0; i < 52; i++ {
+	// 	for y, v := range responseObjectRelations.Index[i].DatesLocations {
 
-			fmt.Println(y, v)
+	// 		fmt.Println(y, v)
 
-		}
-		fmt.Println()
-	}
+	// 	}
+	// 	fmt.Println()
+	// }
 
 	responseDates, err := http.Get("https://groupietrackers.herokuapp.com/api/dates")
 	if err != nil {
@@ -204,7 +206,7 @@ func UnmarshalArtistData() {
 	json.Unmarshal(responseDatesData, &responseObjectDates)
 
 	for i := 0; i < len(responseObjectDates.Dates); i++ {
-		ArtistConcertDates = append(ArtistConcertDates, responseObjectDates.Dates[i].Dates)
+		TotalInfo.ArtistConcertDates = append(TotalInfo.ArtistConcertDates, responseObjectDates.Dates[i].Dates)
 	}
 
 	responseLocations, err := http.Get("https://groupietrackers.herokuapp.com/api/locations")
@@ -224,7 +226,7 @@ func UnmarshalArtistData() {
 	//fmt.Println(responseObjectLocations.Locations[0].Locations)
 
 	for i := 0; i < len(responseObjectLocations.Locations); i++ {
-		ArtistLocations = append(ArtistLocations, responseObjectLocations.Locations[i].Locations)
+		TotalInfo.ArtistLocations = append(TotalInfo.ArtistLocations, responseObjectLocations.Locations[i].Locations)
 	}
 
 }
