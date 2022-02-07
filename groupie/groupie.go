@@ -1,8 +1,7 @@
-package main
+package groupie
 
 import (
 	"encoding/json"
-	"fmt"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -100,25 +99,25 @@ type Relations struct {
 // 	DatesLocations map[string][]string `json:"datesLocations"`
 // }
 
-func main() {
+//func main() {
 
-	UnmarshalArtistData()
+// 	UnmarshalArtistData()
 
-	for i := 0; i < len(TotalInfo.ArtistCreationDate); i++ {
-		fmt.Println(TotalInfo.ArtistID[i])
-		fmt.Println(TotalInfo.ArtistName[i])
-		fmt.Println(TotalInfo.ArtistCreationDate[i])
-		fmt.Println(TotalInfo.ArtistFirstAlbum[i])
-		fmt.Println(TotalInfo.ArtistMembers[i])
-		fmt.Println(TotalInfo.ArtistConcertDates[i])
-		fmt.Println(TotalInfo.ArtistLocations[i])
-		fmt.Println()
+// 	for i := 0; i < len(TotalInfo.ArtistCreationDate); i++ {
+// 		fmt.Println(TotalInfo.ArtistID[i])
+// 		fmt.Println(TotalInfo.ArtistName[i])
+// 		fmt.Println(TotalInfo.ArtistCreationDate[i])
+// 		fmt.Println(TotalInfo.ArtistFirstAlbum[i])
+// 		fmt.Println(TotalInfo.ArtistMembers[i])
+// 		fmt.Println(TotalInfo.ArtistConcertDates[i])
+// 		fmt.Println(TotalInfo.ArtistLocations[i])
+// 		fmt.Println()
 
-	}
+// 	}
 
-	//FillStruct()
+// 	//FillStruct()
 
-}
+// }
 
 func UnmarshalArtistData() {
 
