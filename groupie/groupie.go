@@ -1,4 +1,4 @@
-package groupie
+package main
 
 import (
 	"encoding/json"
@@ -16,9 +16,9 @@ var tpl *template.Template
 /*This init function, once it's initialised, makes it so that each html file
 in the templates folder is parsed i.e. they all get looked through once and
 then stored in the memory ready to go when needed*/
-func init() {
-	tpl = template.Must(template.ParseGlob("templates/*html"))
-}
+// func init() {
+// 	tpl = template.Must(template.ParseGlob("templates/*html"))
+// }
 
 var (
 	ArtistID              []int
@@ -29,22 +29,32 @@ var (
 	ArtistFirstAlbum      []string
 	ArtistLocations       [][]string
 	ArtistConcertDates    [][]string
-	ArtistsDatesLocations map[string][]string
+	ArtistsDatesLocations []map[string][]string
+	Artistes              []Artists
+	InfoAll               []TotalInfo
+	Places                Locations
+	Days                  Dates
+	Dlocs                 Relations
 )
 
 type TotalInfo struct {
-	ArtistID              []int
-	ArtistImage           []string
-	ArtistName            []string
-	ArtistMembers         [][]string
-	ArtistCreationDate    []int
-	ArtistFirstAlbum      []string
-	ArtistLocations       [][]string
-	ArtistConcertDates    [][]string
+	ArtistID              int
+	ArtistImage           string
+	ArtistName            string
+	ArtistMembers         []string
+	ArtistCreationDate    int
+	ArtistFirstAlbum      string
+	ArtistLocations       []string
+	ArtistConcertDates    []string
 	ArtistsDatesLocations map[string][]string
 }
 
-type Artists []struct {
+// type TotalInfo []struct {
+// 	Totale
+// 	ArtistsDatesLocations map[string][]string
+// }
+
+type Artists struct {
 	ID           int      `json:"id"`
 	Image        string   `json:"image"`
 	Name         string   `json:"name"`
@@ -75,22 +85,43 @@ type locations struct {
 }
 
 type Relations struct {
-	Relations []relations `json:"index"`
+	Index []struct {
+		ID             int
+		DatesLocations map[string][]string
+	}
 }
 
-type relations struct {
-	ID             int                 `json:"id"`
-	DatesLocations map[string][]string `json:"datesLocations"`
-}
+// type Relations struct {
+// 	Relations []relations
+// }
+
+// type relations struct {
+// 	ID             int                 `json:"id"`
+// 	DatesLocations map[string][]string `json:"datesLocations"`
+// }
 
 func main() {
 
 	UnmarshalArtistData()
-	for k, v := range ArtistsDatesLocations[""] {
-		fmt.Println(k, v)
+	//FillStruct()
+
+	for i := 0; i < len(ArtistName); i++ {
+		for _, t := range ArtistsDatesLocations {
+			for k, v := range t {
+
+				fmt.Println(k, v)
+				fmt.Println()
+			}
+
+		}
 	}
 
-	fmt.Println(ArtistsDatesLocations["saitama-japan"])
+	// for _, v := range InfoAll {
+	// 	for l, d := range v.ArtistsDatesLocations {
+	// 		fmt.Println(l, d)
+	// 		fmt.Println()
+	// 	}
+	// }
 
 }
 
@@ -107,7 +138,7 @@ func UnmarshalArtistData() {
 		panic("Couldn't read data for Artists!")
 	}
 
-	var responseObjectArtists Artists
+	var responseObjectArtists []Artists
 
 	json.Unmarshal(responseArtistsData, &responseObjectArtists)
 
@@ -142,24 +173,20 @@ func UnmarshalArtistData() {
 
 	responseData, err := ioutil.ReadAll(responseRelations.Body)
 	if err != nil {
-		panic("Couldn't read data for the Artists")
+		panic("Couldn't read data for the Relations")
 	}
 
 	var responseObjectRelations Relations
 
 	json.Unmarshal(responseData, &responseObjectRelations)
 
-	//x := responseObjectRelations.Relations[0].DatesLocations
+	for i := 0; i < 52; i++ {
+		for y, v := range responseObjectRelations.Index[i].DatesLocations {
 
-	// for k, v := range x {
+			fmt.Println(y, v)
 
-	// 	fmt.Println(k, v)
-
-	// }
-	for i := 0; i < len(Artists{}); i++ {
-
-		ArtistsDatesLocations = responseObjectRelations.Relations[i].DatesLocations
-
+		}
+		fmt.Println()
 	}
 
 	responseDates, err := http.Get("https://groupietrackers.herokuapp.com/api/dates")
@@ -201,6 +228,27 @@ func UnmarshalArtistData() {
 	}
 
 }
+
+// func FillStruct() {
+
+// 	for i := range Artistes {
+
+// 		var add TotalInfo
+
+// 		add.ArtistID = Artistes[i].ID
+// 		add.ArtistImage = Artistes[i].Image
+// 		add.ArtistName = Artistes[i].Name
+// 		add.ArtistMembers = Artistes[i].Members
+// 		add.ArtistCreationDate = Artistes[i].CreationDate
+// 		add.ArtistFirstAlbum = Artistes[i].FirstAlbum
+// 		add.ArtistLocations = Places.Locations[i].Locations
+// 		add.ArtistConcertDates = Days.Dates[i].Dates
+// 		add.ArtistsDatesLocations = Dlocs.Relations[i].DatesLocations
+
+// 		InfoAll = append(InfoAll, add)
+// 	}
+
+// }
 
 func Requests() {
 
