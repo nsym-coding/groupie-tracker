@@ -20,5 +20,5 @@ func main() {
 		fmt.Println(groupie.TotalInfo.ArtistLocations[i])
 		fmt.Println()
 	}
-	//groupie.Requests()
+	groupie.Requests()
 }

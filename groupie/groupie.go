@@ -2,6 +2,7 @@ package groupie
 
 import (
 	"encoding/json"
+	"fmt"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -15,9 +16,9 @@ var tpl *template.Template
 /*This init function, once it's initialised, makes it so that each html file
 in the templates folder is parsed i.e. they all get looked through once and
 then stored in the memory ready to go when needed*/
-// func init() {
-// 	tpl = template.Must(template.ParseGlob("templates/*html"))
-// }
+func init() {
+	tpl = template.Must(template.ParseGlob("templates/*html"))
+}
 
 var (
 	ArtistID              []int
@@ -48,12 +49,16 @@ var TotalInfo struct {
 	ArtistsDatesLocations []map[string][]string
 }
 
+type TI []struct {
+	TotalInfo struct{}
+}
+
 // type TotalInfo []struct {
 // 	Totale
 // 	ArtistsDatesLocations map[string][]string
 // }
 
-type Artists struct {
+type Artists []struct {
 	ID           int      `json:"id"`
 	Image        string   `json:"image"`
 	Name         string   `json:"name"`
@@ -99,25 +104,27 @@ type Relations struct {
 // 	DatesLocations map[string][]string `json:"datesLocations"`
 // }
 
-//func main() {
+func main() {
 
-// 	UnmarshalArtistData()
+	UnmarshalArtistData()
 
-// 	for i := 0; i < len(TotalInfo.ArtistCreationDate); i++ {
-// 		fmt.Println(TotalInfo.ArtistID[i])
-// 		fmt.Println(TotalInfo.ArtistName[i])
-// 		fmt.Println(TotalInfo.ArtistCreationDate[i])
-// 		fmt.Println(TotalInfo.ArtistFirstAlbum[i])
-// 		fmt.Println(TotalInfo.ArtistMembers[i])
-// 		fmt.Println(TotalInfo.ArtistConcertDates[i])
-// 		fmt.Println(TotalInfo.ArtistLocations[i])
-// 		fmt.Println()
+	for i := 0; i < len(TotalInfo.ArtistCreationDate); i++ {
 
-// 	}
+		fmt.Println(TotalInfo.ArtistID[i])
+		fmt.Println(TotalInfo.ArtistName[i])
+		fmt.Println(TotalInfo.ArtistCreationDate[i])
+		fmt.Println(TotalInfo.ArtistFirstAlbum[i])
+		fmt.Println(TotalInfo.ArtistMembers[i])
+		fmt.Println(TotalInfo.ArtistConcertDates[i])
+		fmt.Println(TotalInfo.ArtistLocations[i])
+		fmt.Println(TotalInfo.ArtistsDatesLocations[i])
+		fmt.Println()
 
-// 	//FillStruct()
+	}
 
-// }
+	// 	//FillStruct()
+
+}
 
 func UnmarshalArtistData() {
 
@@ -132,7 +139,7 @@ func UnmarshalArtistData() {
 		panic("Couldn't read data for Artists!")
 	}
 
-	var responseObjectArtists []Artists
+	var responseObjectArtists Artists
 
 	json.Unmarshal(responseArtistsData, &responseObjectArtists)
 
@@ -181,12 +188,35 @@ func UnmarshalArtistData() {
 
 	json.Unmarshal(responseData, &responseObjectRelations)
 
+	//var DLMap []map[string][]string
+
+	for _, value := range responseObjectRelations.Index {
+		TotalInfo.ArtistsDatesLocations = append(TotalInfo.ArtistsDatesLocations, value.DatesLocations)
+	}
+
+	// fmt.Println(DLMap[0])
+
 	// for i := 0; i < 52; i++ {
 	// 	for y, v := range responseObjectRelations.Index[i].DatesLocations {
+	// 		for _, tmap := range oMap {
+	// 			//for key, value := range tmap{
+	// 			tmap[y] = v
+	// 		}
+
+	// 	}
+	// }
+
+	// fmt.Println(len(oMap))
+
+	// fmt.Printf("dl:  %+v\n", responseObjectRelations.Index)
+
+	// for i := 0; i < 52; i++ {
+	// 	for y, v := range responseObjectRelations.Index[0].DatesLocations {
 
 	// 		fmt.Println(y, v)
 
 	// 	}
+	// 	fmt.Println(len(responseObjectRelations.Index[0].DatesLocations))
 	// 	fmt.Println()
 	// }
 
@@ -232,7 +262,7 @@ func UnmarshalArtistData() {
 
 // func FillStruct() {
 
-// 	for i := range Artistes {
+// 	for i := range TotalInfo {
 
 // 		var add TotalInfo
 
@@ -262,23 +292,13 @@ func Requests() {
 func index(w http.ResponseWriter, r *http.Request) {
 
 	//-------------Create a struct to hold unmarshalled data-----------
-
-	var TotalInfo struct {
-		ArtistID           []int
-		ArtistImage        string
-		ArtistName         []string
-		ArtistMembers      [][]string
-		ArtistCreationDate []int
-		ArtistFirstAlbum   []string
-		ArtistLocations    [][]string
-		ArtistConcertDates [][]string
-	}
+	var IT TI
 
 	if r.URL.Path != "/" {
 		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
 	} else {
 
-		tpl.ExecuteTemplate(w, "index.html", TotalInfo)
+		tpl.ExecuteTemplate(w, "index.html", IT)
 	}
 }
 
@@ -302,7 +322,7 @@ func artistInfo(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
 	} else {
 
-		tpl.ExecuteTemplate(w, "info.html", ArtistsDatesLocations)
+		tpl.ExecuteTemplate(w, "info.html", responseObject.Index)
 	}
 
 }
