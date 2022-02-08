@@ -186,6 +186,9 @@ func UnmarshalDatesLocations() {
 	for _, slice := range responseObjectRelations.Index {
 		TotalInfo.ArtistsDatesLocations = append(TotalInfo.ArtistsDatesLocations, slice.DatesLocations)
 	}
+	
+	//fmt.Println(TotalInfo.ArtistsDatesLocations[0])
+
 
 	
 //--------------Unmarshall Dates-------------------
@@ -209,7 +212,8 @@ func UnmarshalDatesLocations() {
 		TotalInfo.ArtistConcertDates = append(TotalInfo.ArtistConcertDates, responseObjectDates.Dates[i].Dates)
 	}
 
-	//fmt.Println(ArtistConcertDates)
+	//fmt.Println(TotalInfo.ArtistConcertDates[0])
+
 
 //--------------Unmarshall Locations-------------------
 
@@ -233,5 +237,7 @@ func UnmarshalDatesLocations() {
 	for i := 0; i < len(responseObjectLocations.Locations); i++ {
 		TotalInfo.ArtistLocations = append(TotalInfo.ArtistLocations, responseObjectLocations.Locations[i].Locations)
 	}
+
+	//fmt.Println(TotalInfo.ArtistLocations[0])
 
 }
