@@ -113,19 +113,6 @@ func main() {
 	UnmarshalRelationsData()
 	UnmarshalDatesData()
 
-	// for i := range Info.Artists {
-	// 	var gd InfoAll
-	// 	gd.Artists[i].ID = i + 1
-	// 	gd.Artists[i].Image = Info.Artists[i].Image
-	// 	gd.Artists[i].Name = Info.Artists[i].Name
-	// 	gd.Artists[i].Members = Info.Artists[i].Members
-	// 	gd.Artists[i].CreationDate = Info.Artists[i].CreationDate
-	// 	gd.Artists[i].FirstAlbum = Info.Artists[i].FirstAlbum
-	// 	gd.Locations[i].Locations = Info.Locations[i].Locations
-	// 	gd.Dates[i].Dates = Info.Dates[i].Dates
-	// 	gd.Relations[i].DatesLocations = Info.Relations[i].DatesLocations
-	// 	// = append(Totale, gd)
-
 	// } else {
 	// 	fmt.Print(err4.Error())
 	// }
@@ -258,9 +245,9 @@ func index(w http.ResponseWriter, r *http.Request) {
 	} else {
 
 		tpl.ExecuteTemplate(w, "index.html", Info.Artists)
+
 	}
 }
-
 func artistInfo(w http.ResponseWriter, r *http.Request) {
 
 	response, err := http.Get("https://groupietrackers.herokuapp.com/api/relation")
