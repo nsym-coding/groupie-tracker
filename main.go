@@ -174,6 +174,8 @@ func main() {
 
 	// fmt.Println(ArtistConcertDates[1])
 
+	requests()
+
 }
 
 func requests() {
