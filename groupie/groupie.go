@@ -1,4 +1,4 @@
-package main
+package groupie
 
 import (
 	"encoding/json"
@@ -16,9 +16,9 @@ var tpl *template.Template
 /*This init function, once it's initialised, makes it so that each html file
 in the templates folder is parsed i.e. they all get looked through once and
 then stored in the memory ready to go when needed*/
-// func init() {
-// 	tpl = template.Must(template.ParseGlob("templates/*html"))
-// }
+func init() {
+	tpl = template.Must(template.ParseGlob("templates/*html"))
+}
 
 var (
 	ArtistID              int
@@ -109,9 +109,9 @@ func main() {
 	// err4 := UnmarshallLocationsData()
 	// if err != nil || err2 != nil || err3 != nil || err4 != nil {
 	UnmarshalArtistData()
-	// UnmarshallLocationsData()
+	UnmarshallLocationsData()
 	UnmarshalRelationsData()
-	// UnmarshalDatesData()
+	UnmarshalDatesData()
 
 	// for i := range Info.Artists {
 	// 	var gd InfoAll
@@ -140,7 +140,7 @@ func main() {
 	// 		fmt.Println(k, v)
 	//
 	//fmt.Println()
-	//fmt.Println(Info.Relations[1].DatesLocations[Info.Locations[1].Locations[0]])
+	fmt.Println(Info.Relations[1].DatesLocations[Info.Locations[1].Locations[0]])
 }
 
 // }
@@ -179,7 +179,7 @@ func UnmarshalRelationsData() {
 
 	json.Unmarshal(responseData, &Connection)
 	Info.Relations = Connection.Relations
-	fmt.Println(Info.Relations)
+	//fmt.Println(Info.Relations)
 }
 func UnmarshalDatesData() error {
 
@@ -257,7 +257,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
 	} else {
 
-		tpl.ExecuteTemplate(w, "index.html", nil)
+		tpl.ExecuteTemplate(w, "index.html", Info.Artists)
 	}
 }
 
@@ -281,7 +281,7 @@ func artistInfo(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
 	} else {
 
-		tpl.ExecuteTemplate(w, "info.html", Connection.Relations)
+		tpl.ExecuteTemplate(w, "info.html", Info.Relations)
 	}
 
 }

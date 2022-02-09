@@ -6,7 +6,7 @@
 
     <meta charset="UTF-8">
 
-    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Index</title>
     <link rel="stylesheet" href="/css/mystyle.css">
@@ -18,12 +18,15 @@
     <form action="/info" method="POST">
 
     {{range . }} 
+    
+   
        <!-- <figure> -->
-       <button><img src="{{.ArtistImage}}" alt="Band Picture" width="275" height="310" ali ></button>
+       <button><img src="{{.Image}}" alt="Band Picture" width="275" height="310" ali ></button>
+       {{.}}
         
-        <figcaption>Band: {{.ArtistName}}</figcaption>
+        <!-- <figcaption>Band: {{.ArtistName}}</figcaption>
         <figcaption>Formed in: {{.ArtistCreationDate}}</figcaption>
-		<!-- {{.Locations}} -->
+		{{.Locations}} -->
         
         
         
