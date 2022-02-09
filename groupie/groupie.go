@@ -20,95 +20,117 @@ then stored in the memory ready to go when needed*/
 // 	tpl = template.Must(template.ParseGlob("templates/*html"))
 // }
 
-var ArtistsID []int
-var ArtistsImage []string
-var ArtistsName []string
-var ArtistsMembers []string
-var ArtistsCreationDate int
-var ArtistsFirstAlbum string
-var ArtistsLocations []string
-var ArtistsConcertDates []string
-var ArtistsDatesLocations map[string][]string
+var (
+	ArtistID              int
+	ArtistImage           string
+	ArtistName            string
+	ArtistMembers         []string
+	ArtistCreationDate    int
+	ArtistFirstAlbum      string
+	ArtistLocations       []string
+	ArtistConcertDates    []string
+	ArtistsDatesLocations map[string][]string
+)
 
-type TotalInfo struct {
-	ArtistID              []int
-	ArtistImage           []string
-	ArtistName            []string
-	ArtistMembers         [][]string
-	ArtistCreationDate    []int
-	ArtistFirstAlbum      []string
-	ArtistLocations       [][]string
-	ArtistConcertDates    [][]string
-	ArtistsDatesLocations []map[string][]string
+// type TotalInfo struct {
+// 	ArtistID              int                 `json:"id"`
+// 	ArtistImage           string              `json:"image"`
+// 	ArtistName            string              `json:"name"`
+// 	ArtistMembers         []string            `json:"members"`
+// 	ArtistCreationDate    int                 `json:"creationDate"`
+// 	ArtistFirstAlbum      string              `json:"firstAlbum"`
+// 	ArtistLocations       []string            `json:"locations"`
+// 	ArtistConcertDates    []string            `json:"concertDates"`
+// 	ArtistsDatesLocations map[string][]string `json:"datesLocations"`
+// }
+
+// var Totale []TotalInfo
+
+type InfoAll struct {
+	Artists   []OrigArtists
+	Dates     []Dates
+	Locations []Locations
+	Relations []Relations
 }
 
-var Totale TotalInfo
-
-type Artists struct {
+type OrigArtists struct {
 	ID           int      `json:"id"`
 	Image        string   `json:"image"`
 	Name         string   `json:"name"`
 	Members      []string `json:"members"`
 	CreationDate int      `json:"creationDate"`
 	FirstAlbum   string   `json:"firstAlbum"`
-	Locations    string   `json:"locations"`
-	ConcertDates string   `json:"concertDates"`
-	Relations    string   `json:"relations"`
+}
+
+var Info InfoAll
+var Datos IndexDates
+var Connection IndexRelations
+var Places IndexLocations
+var Artistes OrigArtists
+
+type IndexDates struct {
+	Dates []Dates `json:"index"`
 }
 
 type Dates struct {
-	Dates []dates `json:"index"`
-}
-
-type dates struct {
 	ID    int      `json:"id"`
 	Dates []string `json:"dates"`
 }
-type Locations struct {
-	Locations []locations `json:"index"`
+type IndexLocations struct {
+	Locations []Locations `json:"index"`
 }
 
-type locations struct {
+type Locations struct {
 	ID        int      `json:"id"`
 	Locations []string `json:"locations"`
 	Dates     string   `json:"dates"`
 }
 
-type Relations struct {
-	Index []struct {
-		ID             int
-		DatesLocations map[string][]string
-	}
+// type Relations struct {
+// 	Index []struct {
+// 		ID             int
+// 		DatesLocations map[string][]string
+// 	}
+// }
+
+type IndexRelations struct {
+	Relations []Relations
 }
 
-// type Relations struct {
-// 	Relations []relations
-// }
-
-// type relations struct {
-// 	ID             int                 `json:"id"`
-// 	DatesLocations map[string][]string `json:"datesLocations"`
-// }
+type Relations struct {
+	ID             int                 `json:"id"`
+	DatesLocations map[string][]string `json:"datesLocations"`
+}
 
 func main() {
 
-	UnmarshalArtistData()
+	if UnmarshalArtistData() != nil || UnmarshalDatesData() != nil || UnmarshalRelationsData() != nil || UnmarshallLocationsData() != nil {
 
-	fmt.Println(Totale.ArtistImage[0])
-	fmt.Println(Totale.ArtistsDatesLocations[0])
-	fmt.Println(Totale.ArtistLocations[0])
-	fmt.Println(Totale.ArtistConcertDates[0])
+		UnmarshalArtistData()
+		UnmarshallLocationsData()
+		UnmarshalRelationsData()
+		UnmarshalDatesData()
 
-	// var x IT
-	// for i := 0; i < 52; i++ {
-	// 	x[i] = TotalInfo{ArtistsID, TotalInfo.ArtistImage[i], TotalInfo.ArtistName[i], TotalInfo.ArtistMembers[i], TotalInfo.ArtistCreationDate[i], TotalInfo.ArtistFirstAlbum[i], TotalInfo.ArtistLocations[i], TotalInfo.ArtistConcertDates[i], TotalInfo.ArtistsDatesLocations[i]}
+		// for i := range Info.Artists {
+		// 	var gd InfoAll
+		// 	gd.Artists[i].ID = i + 1
+		// 	gd.Artists[i].Image = Info.Artists[i].Image
+		// 	gd.Artists[i].Name = Info.Artists[i].Name
+		// 	gd.Artists[i].Members = Info.Artists[i].Members
+		// 	gd.Artists[i].CreationDate = Info.Artists[i].CreationDate
+		// 	gd.Artists[i].FirstAlbum = Info.Artists[i].FirstAlbum
+		// 	gd.Locations[i].Locations = Info.Locations[i].Locations
+		// 	gd.Dates[i].Dates = Info.Dates[i].Dates
+		// 	gd.Relations[i].DatesLocations = Info.Relations[i].DatesLocations
+		// 	// = append(Totale, gd)
 
-	// }
-
-	// fmt.Println(x[0])
+	}
+	for i := 0; i < 52; i++ {
+		fmt.Println(Info.Locations[i].Locations)
+	}
 }
 
-func UnmarshalArtistData() {
+func UnmarshalArtistData() error {
 
 	responseArtists, err := http.Get("https://groupietrackers.herokuapp.com/api/artists")
 	if err != nil {
@@ -121,118 +143,86 @@ func UnmarshalArtistData() {
 		panic("Couldn't read data for Artists!")
 	}
 
-	var responseObjectArtists []Artists
+	// var responseObjectArtists Artists
 
-	json.Unmarshal(responseArtistsData, &responseObjectArtists)
-
-	for i := 0; i < 52; i++ {
-		Totale.ArtistID = append(Totale.ArtistID, responseObjectArtists[i].ID)
-		//fmt.Println(Totale.ArtistID)
-
-	}
-
-	for i := 0; i < 52; i++ {
-		Totale.ArtistName = append(Totale.ArtistName, responseObjectArtists[i].Name)
-	}
-
-	for i := 0; i < len(responseObjectArtists); i++ {
-		Totale.ArtistImage = append(Totale.ArtistImage, responseObjectArtists[i].Image)
-
-		for i := 0; i < len(responseObjectArtists); i++ {
-			Totale.ArtistCreationDate = append(Totale.ArtistCreationDate, responseObjectArtists[i].CreationDate)
-
-		}
-
-		for i := 0; i < len(responseObjectArtists); i++ {
-			Totale.ArtistFirstAlbum = append(Totale.ArtistFirstAlbum, responseObjectArtists[i].FirstAlbum)
-
-		}
-
-		responseRelations, err := http.Get("https://groupietrackers.herokuapp.com/api/relation")
-		if err != nil {
-			panic("Couldn't get the relations data!")
-		}
-
-		responseData, err := ioutil.ReadAll(responseRelations.Body)
-		if err != nil {
-			panic("Couldn't read data for the Relations")
-		}
-
-		var responseObjectRelations Relations
-
-		json.Unmarshal(responseData, &responseObjectRelations)
-
-		//var DLMap []map[string][]string
-
-		for _, value := range responseObjectRelations.Index {
-			Totale.ArtistsDatesLocations = append(Totale.ArtistsDatesLocations, value.DatesLocations)
-		}
-
-		// fmt.Println(DLMap[0])
-
-		// for i := 0; i < 52; i++ {
-		// 	for y, v := range responseObjectRelations.Index[i].DatesLocations {
-		// 		for _, tmap := range oMap {
-		// 			//for key, value := range tmap{
-		// 			tmap[y] = v
-		// 		}
-
-		// 	}
-		// }
-
-		// fmt.Println(len(oMap))
-		//fmt.Printf("dl:  %+v\n", responseObjectRelations.Index)
-
-		// for i := 0; i < 52; i++ {
-		// 	for y, v := range responseObjectRelations.Index[0].DatesLocations {
-
-		// 		fmt.Println(y, v)
-
-		// 	}
-		// 	fmt.Println(len(responseObjectRelations.Index[0].DatesLocations))
-		// 	fmt.Println()
-		// }
-
-		responseDates, err := http.Get("https://groupietrackers.herokuapp.com/api/dates")
-		if err != nil {
-			panic("Couldn't get Dates info from the API!")
-		}
-		defer responseDates.Body.Close()
-
-		responseDatesData, err := ioutil.ReadAll(responseDates.Body)
-		if err != nil {
-			panic("Couldn't read data for Dates")
-		}
-
-		var responseObjectDates Dates
-		json.Unmarshal(responseDatesData, &responseObjectDates)
-
-		for i := 0; i < len(responseObjectDates.Dates); i++ {
-			Totale.ArtistConcertDates = append(Totale.ArtistConcertDates, responseObjectDates.Dates[i].Dates)
-		}
-
-		responseLocations, err := http.Get("https://groupietrackers.herokuapp.com/api/locations")
-		if err != nil {
-			panic("Couldn't get Location info from API")
-		}
-		defer responseLocations.Body.Close()
-
-		responseLocationsData, err := ioutil.ReadAll(responseLocations.Body)
-		if err != nil {
-			panic("Couldn't read data for Locations!")
-		}
-
-		var responseObjectLocations Locations
-		json.Unmarshal(responseLocationsData, &responseObjectLocations)
-
-		//fmt.Println(responseObjectLocations.Locations[0].Locations)
-
-		for i := 0; i < len(responseObjectLocations.Locations); i++ {
-			Totale.ArtistLocations = append(Totale.ArtistLocations, responseObjectLocations.Locations[i].Locations)
-		}
-
-	}
+	json.Unmarshal(responseArtistsData, &Info.Artists)
+	return nil
 }
+
+func UnmarshalRelationsData() error {
+
+	responseRelations, err := http.Get("https://groupietrackers.herokuapp.com/api/relation")
+	if err != nil {
+		panic("Couldn't get the relations data!")
+	}
+
+	responseData, err := ioutil.ReadAll(responseRelations.Body)
+	if err != nil {
+		panic("Couldn't read data for the Relations")
+	}
+
+	// var ResponseObjectRelations Relations
+
+	json.Unmarshal(responseData, &Connection)
+	return nil
+}
+func UnmarshalDatesData() error {
+
+	responseDates, err := http.Get("https://groupietrackers.herokuapp.com/api/dates")
+	if err != nil {
+		panic("Couldn't get Dates info from the API!")
+	}
+	defer responseDates.Body.Close()
+
+	responseDatesData, err := ioutil.ReadAll(responseDates.Body)
+	if err != nil {
+		panic("Couldn't read data for Dates")
+	}
+
+	// var ResponseObjectDates Dates
+	json.Unmarshal(responseDatesData, &Datos)
+	return nil
+}
+
+func UnmarshallLocationsData() error {
+	responseLocations, err := http.Get("https://groupietrackers.herokuapp.com/api/locations")
+	if err != nil {
+		panic("Couldn't get Location info from API")
+	}
+	defer responseLocations.Body.Close()
+
+	responseLocationsData, err := ioutil.ReadAll(responseLocations.Body)
+	if err != nil {
+		panic("Couldn't read data for Locations!")
+	}
+
+	// var ResponseObjectLocations Locations
+	json.Unmarshal(responseLocationsData, &Places)
+	Info.Locations = Places.Locations
+
+	return nil
+}
+
+// func TotalData() {
+// 	// UnmarshalArtistData()
+// 	// UnmarshallLocationsData()
+// 	// UnmarshalRelationsData()
+// 	// UnmarshalDatesData()
+// 	// for i := range Artists {
+// 	// 	var gd TotalInfo
+// 	// 	gd.ArtistID = i + 1
+// 	// 	gd.ArtistImage = Artists[i].Image
+// 	// 	gd.ArtistName = Artists[i].Name
+// 	// 	gd.ArtistMembers = Artists[i].Members
+// 	// 	gd.ArtistCreationDate = Artists[i].CreationDate
+// 	// 	gd.ArtistFirstAlbum = Artists[i].FirstAlbum
+// 	// 	gd.ArtistLocations = responseObjectLocations.Locations[i].Locations
+// 	// 	gd.ArtistConcertDates = responseObjectDates.Dates[i].Dates
+// 	// 	gd.ArtistsDatesLocations = responseObjectRelations.Relations[i].DatesLocations
+// 	// 	Totale = append(Totale, gd)
+
+// 	// }
+// }
 
 func Requests() {
 
@@ -251,7 +241,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
 	} else {
 
-		tpl.ExecuteTemplate(w, "index.html", Totale)
+		tpl.ExecuteTemplate(w, "index.html", nil)
 	}
 }
 
@@ -275,7 +265,7 @@ func artistInfo(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
 	} else {
 
-		tpl.ExecuteTemplate(w, "info.html", responseObject.Index)
+		tpl.ExecuteTemplate(w, "info.html", Connection.Relations)
 	}
 
 }
