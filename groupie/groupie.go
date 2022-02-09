@@ -94,7 +94,7 @@ type Locations struct {
 // }
 
 type IndexRelations struct {
-	Relations []Relations
+	Relations []Relations `json:"index"`
 }
 
 type Relations struct {
@@ -103,34 +103,49 @@ type Relations struct {
 }
 
 func main() {
+	// err := UnmarshalArtistData()
+	// err2 := UnmarshalDatesData()
+	// err3 := UnmarshalRelationsData()
+	// err4 := UnmarshallLocationsData()
+	// if err != nil || err2 != nil || err3 != nil || err4 != nil {
+	UnmarshalArtistData()
+	// UnmarshallLocationsData()
+	UnmarshalRelationsData()
+	// UnmarshalDatesData()
 
-	if UnmarshalArtistData() != nil || UnmarshalDatesData() != nil || UnmarshalRelationsData() != nil || UnmarshallLocationsData() != nil {
+	// for i := range Info.Artists {
+	// 	var gd InfoAll
+	// 	gd.Artists[i].ID = i + 1
+	// 	gd.Artists[i].Image = Info.Artists[i].Image
+	// 	gd.Artists[i].Name = Info.Artists[i].Name
+	// 	gd.Artists[i].Members = Info.Artists[i].Members
+	// 	gd.Artists[i].CreationDate = Info.Artists[i].CreationDate
+	// 	gd.Artists[i].FirstAlbum = Info.Artists[i].FirstAlbum
+	// 	gd.Locations[i].Locations = Info.Locations[i].Locations
+	// 	gd.Dates[i].Dates = Info.Dates[i].Dates
+	// 	gd.Relations[i].DatesLocations = Info.Relations[i].DatesLocations
+	// 	// = append(Totale, gd)
 
-		UnmarshalArtistData()
-		UnmarshallLocationsData()
-		UnmarshalRelationsData()
-		UnmarshalDatesData()
-
-		// for i := range Info.Artists {
-		// 	var gd InfoAll
-		// 	gd.Artists[i].ID = i + 1
-		// 	gd.Artists[i].Image = Info.Artists[i].Image
-		// 	gd.Artists[i].Name = Info.Artists[i].Name
-		// 	gd.Artists[i].Members = Info.Artists[i].Members
-		// 	gd.Artists[i].CreationDate = Info.Artists[i].CreationDate
-		// 	gd.Artists[i].FirstAlbum = Info.Artists[i].FirstAlbum
-		// 	gd.Locations[i].Locations = Info.Locations[i].Locations
-		// 	gd.Dates[i].Dates = Info.Dates[i].Dates
-		// 	gd.Relations[i].DatesLocations = Info.Relations[i].DatesLocations
-		// 	// = append(Totale, gd)
-
-	}
-	for i := 0; i < 52; i++ {
-		fmt.Println(Info.Locations[i].Locations)
-	}
+	// } else {
+	// 	fmt.Print(err4.Error())
+	// }
+	// for i := 0; i < 52; i++ {
+	// 	fmt.Println(Info.Artists[i].Name)
+	// 	//fmt.Println(Info.Locations[i].Locations)
+	// 	//fmt.Println(Info.Dates[i].Dates)
+	//fmt.Println(Info.Relations[1].DatesLocations[Info.Locations[1].Locations[0]])
+	// }
+	// for _, slice := range Info.Relations {
+	// 	for k, v := range slice.DatesLocations {
+	// 		fmt.Println(k, v)
+	//
+	//fmt.Println()
+	//fmt.Println(Info.Relations[1].DatesLocations[Info.Locations[1].Locations[0]])
 }
 
-func UnmarshalArtistData() error {
+// }
+
+func UnmarshalArtistData() {
 
 	responseArtists, err := http.Get("https://groupietrackers.herokuapp.com/api/artists")
 	if err != nil {
@@ -146,10 +161,9 @@ func UnmarshalArtistData() error {
 	// var responseObjectArtists Artists
 
 	json.Unmarshal(responseArtistsData, &Info.Artists)
-	return nil
 }
 
-func UnmarshalRelationsData() error {
+func UnmarshalRelationsData() {
 
 	responseRelations, err := http.Get("https://groupietrackers.herokuapp.com/api/relation")
 	if err != nil {
@@ -164,7 +178,8 @@ func UnmarshalRelationsData() error {
 	// var ResponseObjectRelations Relations
 
 	json.Unmarshal(responseData, &Connection)
-	return nil
+	Info.Relations = Connection.Relations
+	fmt.Println(Info.Relations)
 }
 func UnmarshalDatesData() error {
 
@@ -181,6 +196,7 @@ func UnmarshalDatesData() error {
 
 	// var ResponseObjectDates Dates
 	json.Unmarshal(responseDatesData, &Datos)
+	Info.Dates = Datos.Dates
 	return nil
 }
 
