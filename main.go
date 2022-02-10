@@ -7,7 +7,11 @@ import (
 func main() {
 
 	groupie.UnmarshalArtistData()
-
+	groupie.UnmarshalDatesData()
+	groupie.UnmarshalRelationsData()
+	groupie.UnmarshallLocationsData()
 	groupie.Requests()
+
+	//fmt.Println(groupie.Information[0].Artists[0].Name)
 
 }

@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 /*This var is a pointer towards template.Template that is a
@@ -72,16 +73,7 @@ type Relations struct {
 }
 
 // func main() {
-// 	// fmt.Println(Information[0].Artists[0].Image)
-// 	// err := UnmarshalArtistData()
-// 	// err2 := UnmarshalDatesData()
-// 	// err3 := UnmarshalRelationsData()
-// 	// err4 := UnmarshallLocationsData()
-// 	// if err != nil || err2 != nil || err3 != nil || err4 != nil {
-// 	UnmarshalArtistData()
-// 	UnmarshallLocationsData()
-// 	UnmarshalRelationsData()
-// 	UnmarshalDatesData()
+// 	fmt.Println(Info.Relations[1].DatesLocations[Info.Locations[1].Locations[0]])
 
 // }
 
@@ -180,7 +172,18 @@ func artistInfo(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
 	} else {
 
-		tpl.ExecuteTemplate(w, "info.html", Info.Relations)
+		submit := r.FormValue("submit")
+		Numsubmit, _ := strconv.Atoi(submit)
+
+		var p []string
+
+		for i := 0; i < 52; i++ {
+			if Numsubmit == Info.Artists[i].ID {
+				p = Info.Relations[Numsubmit].DatesLocations[Info.Locations[Numsubmit].Locations[0]]
+			}
+		}
+
+		tpl.ExecuteTemplate(w, "info.html", p)
 	}
 
 }
