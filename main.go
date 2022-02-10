@@ -9,4 +9,5 @@ func main() {
 	groupie.UnmarshalArtistData()
 
 	groupie.Requests()
+
 }

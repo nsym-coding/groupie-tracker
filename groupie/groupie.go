@@ -2,7 +2,6 @@ package groupie
 
 import (
 	"encoding/json"
-	"fmt"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -20,31 +19,7 @@ func init() {
 	tpl = template.Must(template.ParseGlob("templates/*html"))
 }
 
-var (
-	ArtistID              int
-	ArtistImage           string
-	ArtistName            string
-	ArtistMembers         []string
-	ArtistCreationDate    int
-	ArtistFirstAlbum      string
-	ArtistLocations       []string
-	ArtistConcertDates    []string
-	ArtistsDatesLocations map[string][]string
-)
-
-// type TotalInfo struct {
-// 	ArtistID              int                 `json:"id"`
-// 	ArtistImage           string              `json:"image"`
-// 	ArtistName            string              `json:"name"`
-// 	ArtistMembers         []string            `json:"members"`
-// 	ArtistCreationDate    int                 `json:"creationDate"`
-// 	ArtistFirstAlbum      string              `json:"firstAlbum"`
-// 	ArtistLocations       []string            `json:"locations"`
-// 	ArtistConcertDates    []string            `json:"concertDates"`
-// 	ArtistsDatesLocations map[string][]string `json:"datesLocations"`
-// }
-
-// var Totale []TotalInfo
+var Information []InfoAll
 
 type InfoAll struct {
 	Artists   []OrigArtists
@@ -66,7 +41,8 @@ var Info InfoAll
 var Datos IndexDates
 var Connection IndexRelations
 var Places IndexLocations
-var Artistes OrigArtists
+
+//var Artistes []OrigArtists
 
 type IndexDates struct {
 	Dates []Dates `json:"index"`
@@ -86,13 +62,6 @@ type Locations struct {
 	Dates     string   `json:"dates"`
 }
 
-// type Relations struct {
-// 	Index []struct {
-// 		ID             int
-// 		DatesLocations map[string][]string
-// 	}
-// }
-
 type IndexRelations struct {
 	Relations []Relations `json:"index"`
 }
@@ -102,33 +71,17 @@ type Relations struct {
 	DatesLocations map[string][]string `json:"datesLocations"`
 }
 
-func main() {
-	// err := UnmarshalArtistData()
-	// err2 := UnmarshalDatesData()
-	// err3 := UnmarshalRelationsData()
-	// err4 := UnmarshallLocationsData()
-	// if err != nil || err2 != nil || err3 != nil || err4 != nil {
-	UnmarshalArtistData()
-	UnmarshallLocationsData()
-	UnmarshalRelationsData()
-	UnmarshalDatesData()
-
-	// } else {
-	// 	fmt.Print(err4.Error())
-	// }
-	// for i := 0; i < 52; i++ {
-	// 	fmt.Println(Info.Artists[i].Name)
-	// 	//fmt.Println(Info.Locations[i].Locations)
-	// 	//fmt.Println(Info.Dates[i].Dates)
-	//fmt.Println(Info.Relations[1].DatesLocations[Info.Locations[1].Locations[0]])
-	// }
-	// for _, slice := range Info.Relations {
-	// 	for k, v := range slice.DatesLocations {
-	// 		fmt.Println(k, v)
-	//
-	//fmt.Println()
-	fmt.Println(Info.Relations[1].DatesLocations[Info.Locations[1].Locations[0]])
-}
+// func main() {
+// 	// fmt.Println(Information[0].Artists[0].Image)
+// 	// err := UnmarshalArtistData()
+// 	// err2 := UnmarshalDatesData()
+// 	// err3 := UnmarshalRelationsData()
+// 	// err4 := UnmarshallLocationsData()
+// 	// if err != nil || err2 != nil || err3 != nil || err4 != nil {
+// 	UnmarshalArtistData()
+// 	UnmarshallLocationsData()
+// 	UnmarshalRelationsData()
+// 	UnmarshalDatesData()
 
 // }
 
@@ -144,8 +97,6 @@ func UnmarshalArtistData() {
 	if err != nil {
 		panic("Couldn't read data for Artists!")
 	}
-
-	// var responseObjectArtists Artists
 
 	json.Unmarshal(responseArtistsData, &Info.Artists)
 }
@@ -199,33 +150,11 @@ func UnmarshallLocationsData() error {
 		panic("Couldn't read data for Locations!")
 	}
 
-	// var ResponseObjectLocations Locations
 	json.Unmarshal(responseLocationsData, &Places)
 	Info.Locations = Places.Locations
 
 	return nil
 }
-
-// func TotalData() {
-// 	// UnmarshalArtistData()
-// 	// UnmarshallLocationsData()
-// 	// UnmarshalRelationsData()
-// 	// UnmarshalDatesData()
-// 	// for i := range Artists {
-// 	// 	var gd TotalInfo
-// 	// 	gd.ArtistID = i + 1
-// 	// 	gd.ArtistImage = Artists[i].Image
-// 	// 	gd.ArtistName = Artists[i].Name
-// 	// 	gd.ArtistMembers = Artists[i].Members
-// 	// 	gd.ArtistCreationDate = Artists[i].CreationDate
-// 	// 	gd.ArtistFirstAlbum = Artists[i].FirstAlbum
-// 	// 	gd.ArtistLocations = responseObjectLocations.Locations[i].Locations
-// 	// 	gd.ArtistConcertDates = responseObjectDates.Dates[i].Dates
-// 	// 	gd.ArtistsDatesLocations = responseObjectRelations.Relations[i].DatesLocations
-// 	// 	Totale = append(Totale, gd)
-
-// 	// }
-// }
 
 func Requests() {
 
@@ -237,9 +166,6 @@ func Requests() {
 
 func index(w http.ResponseWriter, r *http.Request) {
 
-	//-------------Create a struct to hold unmarshalled data-----------
-	// var IT TI
-
 	if r.URL.Path != "/" {
 		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
 	} else {
@@ -249,20 +175,6 @@ func index(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func artistInfo(w http.ResponseWriter, r *http.Request) {
-
-	response, err := http.Get("https://groupietrackers.herokuapp.com/api/relation")
-	if err != nil {
-		panic("Couldn't get the relations data!")
-	}
-
-	responseData, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		panic("Couldn't read data for the Artists")
-	}
-
-	var responseObject Relations
-
-	json.Unmarshal(responseData, &responseObject)
 
 	if r.URL.Path != "/info" {
 		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
