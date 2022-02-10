@@ -10,7 +10,7 @@
 <body>
     <form action="/info" method="POST">
     {{range . }}
-    <button type="ChosenBand" value="{{.ID}}" name="ChosenBand"><img src="{{.Image}}" alt="Band Picture" width="275" height="310" ali ></button>
+    <button type="submit" value="{{.ID}}" name="ChosenBand"><img src="{{.Image}}" alt="Band Picture" width="275" height="310" ali ></button>
       
     {{end}}
     </form>

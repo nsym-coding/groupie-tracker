@@ -173,13 +173,13 @@ func artistInfo(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
 	} else {
 
-		submit := r.FormValue("ID")
+		submit := r.FormValue("ChosenBand")
 		Numsubmit, _ := strconv.Atoi(submit)
-		fmt.Println(Numsubmit)
+		fmt.Println(Numsubmit - 1)
 
-		p := Info.Relations[Numsubmit].DatesLocations[Info.Locations[Numsubmit].Locations[0]]
+		p := Info.Relations[Numsubmit-1].DatesLocations[Info.Locations[Numsubmit-1].Locations[0]]
 
-		fmt.Println(Numsubmit)
+		fmt.Println(Numsubmit - 1)
 
 		tpl.ExecuteTemplate(w, "info.html", p)
 	}
