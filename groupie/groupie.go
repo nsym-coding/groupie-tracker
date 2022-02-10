@@ -2,6 +2,7 @@ package groupie
 
 import (
 	"encoding/json"
+	"fmt"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -172,16 +173,13 @@ func artistInfo(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
 	} else {
 
-		submit := r.FormValue("submit")
+		submit := r.FormValue("ID")
 		Numsubmit, _ := strconv.Atoi(submit)
+		fmt.Println(Numsubmit)
 
-		var p []string
+		p := Info.Relations[Numsubmit].DatesLocations[Info.Locations[Numsubmit].Locations[0]]
 
-		for i := 0; i < 52; i++ {
-			if Numsubmit == Info.Artists[i].ID {
-				p = Info.Relations[Numsubmit].DatesLocations[Info.Locations[Numsubmit].Locations[0]]
-			}
-		}
+		fmt.Println(Numsubmit)
 
 		tpl.ExecuteTemplate(w, "info.html", p)
 	}
