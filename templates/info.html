@@ -6,9 +6,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Info</title>
 </head>
+
 <body>
-    {{range . }}
-    <pre>{{.}}</pre>
+
+    {{ range $_, $slice := .}} 
+
+    {{ range $key, $value := $slice.DatesLocations}} 
+    {{$key}}
+    {{ range $_, $dates := $value}} 
+
+    <pre>{{$dates}}</pre>
+   
     {{end}}
+    {{end}}
+    {{end}}
+
 </body>
+
 </html>
