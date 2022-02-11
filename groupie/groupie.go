@@ -1,173 +1,92 @@
-package main
+package groupie
 
 import (
 	"encoding/json"
-	"fmt"
-	//"html/template"
 	"io/ioutil"
 	//"log"
 	"net/http"
+	"fmt"
 )
 
-// /*This var is a pointer towards template.Template that is a
-// pointer to help process the html.*/
-// var tpl *template.Template
 
-// /*This init function, once it's initialised, makes it so that each html file
-// in the templates folder is parsed i.e. they all get looked through once and
-// then stored in the memory ready to go when needed*/
-// func init() {
-// 	tpl = template.Must(template.ParseGlob("templates/*html"))
-// }
+var Information []TotalInfo
 
-// var (
-// 	ArtistID              []int
-// 	ArtistImage           []string
-// 	ArtistName            []string
-// 	ArtistMembers         [][]string
-// 	ArtistCreationDate    []int
-// 	ArtistFirstAlbum      []string
-// 	ArtistLocations       [][]string
-// 	ArtistConcertDates    [][]string
-// 	ArtistsDatesLocations map[string][]string
-// )
-
-var TotalInfo struct {
-	ArtistID              []int
-	ArtistImage           []string
-	ArtistName            []string
-	ArtistMembers         [][]string
-	ArtistCreationDate    []int
-	ArtistFirstAlbum      []string
-	ArtistLocations       [][]string
-	ArtistConcertDates    [][]string
-	ArtistsDatesLocations []map[string][]string
+type TotalInfo struct {
+	Artists   []Artists
+	Dates     []Dates
+	Locations []Locations
+	Relations []Relations
 }
 
-// type TotalInfo struct {
-// 	ArtistID              []int
-// 	ArtistImage           []string
-// 	ArtistName            []string
-// 	ArtistMembers         [][]string
-// 	ArtistCreationDate    []int
-// 	ArtistFirstAlbum      []string
-// 	ArtistLocations       [][]string
-// 	ArtistConcertDates    [][]string
-// 	ArtistsDatesLocations map[string][]string
-// }
-
-type TI struct {
-	ArtistID              []int
-	ArtistImage           []string
-	ArtistName            []string
-	ArtistMembers         [][]string
-	ArtistCreationDate    []int
-	ArtistFirstAlbum      []string
-	ArtistLocations       [][]string
-	ArtistConcertDates    [][]string
-	ArtistsDatesLocations map[string][]string
-}
-
-type IT struct {
-	IT []TI
-}
-
-type Artists []struct {
+type Artists struct {
 	ID           int      `json:"id"`
 	Image        string   `json:"image"`
 	Name         string   `json:"name"`
 	Members      []string `json:"members"`
 	CreationDate int      `json:"creationDate"`
 	FirstAlbum   string   `json:"firstAlbum"`
-	Locations    string   `json:"locations"`
-	ConcertDates string   `json:"concertDates"`
-	Relations    string   `json:"relations"`
+}
+
+type IndexDates struct {
+	Dates []Dates `json:"index"`
 }
 
 type Dates struct {
-	Dates []dates `json:"index"`
-}
-
-type dates struct {
 	ID    int      `json:"id"`
 	Dates []string `json:"dates"`
 }
-type Locations struct {
-	Locations []locations `json:"index"`
+
+type IndexLocations struct {
+	Locations []Locations `json:"index"`
 }
 
-type locations struct {
+type Locations struct {
 	ID        int      `json:"id"`
 	Locations []string `json:"locations"`
 	Dates     string   `json:"dates"`
 }
 
+type IndexRelations struct {
+	Relations []Relations `json:"index"`
+}
+
 type Relations struct {
-	Index []struct {
-		ID             int
-		DatesLocations map[string][]string
+	ID             int                 `json:"id"`
+	DatesLocations map[string][]string `json:"datesLocations"`
+}
+
+var (
+	 Info TotalInfo
+	 Datos IndexDates
+	 Connection IndexRelations
+	 Places IndexLocations
+)
+func main() {
+	UnmarshalArtistData()
+	UnmarshalDatesData()
+	UnmarshallLocationsData()
+}
+
+func UnmarshalArtistData() error {
+	//--------------Unmarshall Artists-------------------
+
+	responseArtists, err := http.Get("https://groupietrackers.herokuapp.com/api/artists")
+	if err != nil {
+		panic("Couldn't get Artists info from API")
 	}
+	defer responseArtists.Body.Close()
+
+	responseArtistsData, err := ioutil.ReadAll(responseArtists.Body)
+	if err != nil {
+		panic("Couldn't read data for Artists!")
+	}
+	//--------------Unmarshalled all Artist data directly to Info variable-------------------
+	json.Unmarshal(responseArtistsData, &Info.Artists)
+	fmt.Println(Info.Artists[10])
+	return nil
 }
 
-
-func main(){
-	//UnmarshalArtistData()
-	UnmarshalDatesLocations()
-}
-
-// func UnmarshalArtistData(){
-// //--------------Unmarshall Artists-------------------
-
-// 	responseArtists, err := http.Get("https://groupietrackers.herokuapp.com/api/artists")
-// 	if err != nil {
-// 		panic("Couldn't get Artists info from API")
-// 	}
-// 	defer responseArtists.Body.Close()
-
-// 	responseArtistsData, err := ioutil.ReadAll(responseArtists.Body)
-// 	if err != nil {
-// 		panic("Couldn't read data for Artists!")
-// 	}
-
-// 	var responseObjectArtists Artists
-// 	json.Unmarshal(responseArtistsData, &responseObjectArtists)
-// //--------------Append Artist ID to variable-------------------
-// 	for i := 0; i < len(responseObjectArtists); i++ {
-// 		ArtistID = append(ArtistID, responseObjectArtists[i].ID)
-// 	}
-// //--------------Append Artist Name to variable-------------------
-
-// 	for i := 0; i < len(responseObjectArtists); i++ {
-// 		ArtistName = append(ArtistName, responseObjectArtists[i].Name)
-// 	}
-// //--------------Append Artist Image to variable-------------------
-
-// 	for i := 0; i < len(responseObjectArtists); i++ {
-// 		ArtistImage = append(ArtistImage, responseObjectArtists[i].Image)
-// 	}
-
-// //--------------Append Artist Members to variable-------------------
-
-// 	for i := 0; i < len(responseObjectArtists); i++ {
-// 		ArtistMembers = append(ArtistMembers, responseObjectArtists[i].Members)
-// 	}
-// //--------------Append Artist Creation Date to variable-------------------
-
-// 	for i := 0; i < len(responseObjectArtists); i++ {
-// 		ArtistCreationDate = append(ArtistCreationDate, responseObjectArtists[i].CreationDate)
-// 	}
-
-// 	// fmt.Println(ArtistID[0])
-// 	// fmt.Println(ArtistName[0])
-// 	// fmt.Println(ArtistImage[0])
-// 	// fmt.Println(ArtistCreationDate[0])
-
-// }
-
-func UnmarshalDatesLocations() {
-
-//--------------Unmarshall Relations-------------------
-
+func UnmarshalRelationsData() error {
 	responseRelations, err := http.Get("https://groupietrackers.herokuapp.com/api/relation")
 	if err != nil {
 		panic("Couldn't get the relations data!")
@@ -178,21 +97,14 @@ func UnmarshalDatesLocations() {
 		panic("Couldn't read data for the Relations")
 	}
 
-	var responseObjectRelations Relations
-	
-	json.Unmarshal(responseData, &responseObjectRelations)
+	//--------------Unmarshalled relation data directly to Connection variable-------------------
+	json.Unmarshal(responseData, &Connection)
+	Info.Relations = Connection.Relations
+	// fmt.Println(Info.Relations)
+	return nil
+}
 
-	
-	for _, slice := range responseObjectRelations.Index {
-		TotalInfo.ArtistsDatesLocations = append(TotalInfo.ArtistsDatesLocations, slice.DatesLocations)
-	}
-	
-	//fmt.Println(TotalInfo.ArtistsDatesLocations[0])
-
-
-	
-//--------------Unmarshall Dates-------------------
-
+func UnmarshalDatesData() error {
 	responseDates, err := http.Get("https://groupietrackers.herokuapp.com/api/dates")
 	if err != nil {
 		panic("Couldn't get Dates info from the API!")
@@ -204,19 +116,13 @@ func UnmarshalDatesLocations() {
 		panic("Couldn't read data for Dates")
 	}
 
-	var responseObjectDates Dates
-	json.Unmarshal(responseDatesData, &responseObjectDates)
+	//--------------Unmarshalled dates data directly to Datos variable-------------------
+	json.Unmarshal(responseDatesData, &Datos)
+	Info.Dates = Datos.Dates
+	return nil
+}
 
-
-	for i := 0; i < len(responseObjectDates.Dates); i++ {
-		TotalInfo.ArtistConcertDates = append(TotalInfo.ArtistConcertDates, responseObjectDates.Dates[i].Dates)
-	}
-
-	//fmt.Println(TotalInfo.ArtistConcertDates[0])
-
-
-//--------------Unmarshall Locations-------------------
-
+func UnmarshallLocationsData() error {
 	responseLocations, err := http.Get("https://groupietrackers.herokuapp.com/api/locations")
 	if err != nil {
 		panic("Couldn't get Location info from API")
@@ -227,17 +133,9 @@ func UnmarshalDatesLocations() {
 	if err != nil {
 		panic("Couldn't read data for Locations!")
 	}
+	//--------------Unmarshalled locations data directly to Places variable-------------------
+	json.Unmarshal(responseLocationsData, &Places)
+	Info.Locations = Places.Locations
 
-	var responseObjectLocations Locations
-	json.Unmarshal(responseLocationsData, &responseObjectLocations)
-
-	// for i := 0; i < len(responseObjectLocations.Locations); i++ {
-	// 	ArtistLocations = append(ArtistLocations, responseObjectLocations.Locations[i].Locations)
-	// }
-	for i := 0; i < len(responseObjectLocations.Locations); i++ {
-		TotalInfo.ArtistLocations = append(TotalInfo.ArtistLocations, responseObjectLocations.Locations[i].Locations)
-	}
-
-	//fmt.Println(TotalInfo.ArtistLocations[0])
-
+	return nil
 }
