@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 )
 
 /*This var is a pointer towards template.Template that is a
@@ -151,15 +152,19 @@ func UnmarshallLocationsData() error {
 
 func Requests() {
 
-	http.HandleFunc("/", index)
+	http.Handle("/", http.FileServer(http.Dir("./templates")))
+
+	http.HandleFunc("/index", index)
 	http.HandleFunc("/relations", relationsInfo)
+	http.HandleFunc("/bandmembers", bandMembers)
+	http.HandleFunc("/bandlocations", bandLocations)
 	http.ListenAndServe(":8080", nil)
 	log.Println("Server started on: http://localhost:8080")
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
 
-	if r.URL.Path != "/" {
+	if r.URL.Path != "/index" {
 		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
 	} else {
 
@@ -173,7 +178,7 @@ func relationsInfo(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
 	} else {
 
-		submit := r.FormValue("ChosenBand")
+		submit := r.FormValue("ChosenBandDL")
 		Numsubmit, _ := strconv.Atoi(submit)
 		fmt.Println(Numsubmit - 1)
 
@@ -184,4 +189,57 @@ func relationsInfo(w http.ResponseWriter, r *http.Request) {
 		tpl.ExecuteTemplate(w, "relations.html", p)
 	}
 
+}
+
+func bandMembers(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/bandmembers" {
+		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
+	} else {
+		submit := r.FormValue("ChosenBandMembers")
+		Numsubmit, _ := strconv.Atoi(submit)
+		fmt.Println(Numsubmit - 1)
+
+		p := Info.Artists[Numsubmit-1]
+
+		fmt.Println(Numsubmit - 1)
+
+		tpl.ExecuteTemplate(w, "bandmembers.html", p)
+	}
+}
+
+func bandLocations(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/bandlocations" {
+		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
+
+	} else {
+		submit := r.FormValue("ChosenBandLocations")
+		Numsubmit, _ := strconv.Atoi(submit)
+		fmt.Println(Numsubmit - 1)
+
+		// var styleStart string = "<style> h1 { color: red('"
+		// var styleEnd string = "'); } </style>"
+
+		fmt.Fprintln(w, "<h1> LOCATIONS </h1>")
+		fmt.Fprintln(w, "<pre>"+strings.Join(Info.Locations[Numsubmit-1].Locations, "\n"))
+
+		fmt.Fprintln(w, "<h1> CREATION DATE </h1>")
+		fmt.Fprintln(w, Info.Artists[Numsubmit-1].CreationDate)
+
+		fmt.Fprintln(w, "<h1> FIRST ALBUM </h1>")
+		fmt.Fprintln(w, Info.Artists[Numsubmit-1].FirstAlbum)
+
+		fmt.Fprintln(w, " <h1> DATES </h1> ")
+		fmt.Fprintln(w, "<pre>"+strings.Join(Info.Dates[Numsubmit-1].Dates, "\n"))
+
+		// fmt.Fprintln(w, "<h1> DATES & LOCATIONS </h1>")
+		// for _, value := range Info.Relations {
+		// 	for place, date := range value.DatesLocations {
+		// 		fmt.Fprintln(w, place[Numsubmit-1], date[Numsubmit-1])
+		// 	}
+		// }
+		fmt.Println(Numsubmit - 1)
+
+		tpl.ExecuteTemplate(w, "bandlocations.html", nil)
+
+	}
 }

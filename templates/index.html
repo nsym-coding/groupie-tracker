@@ -6,14 +6,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Index</title>
     <link rel="stylesheet" type="text/css" href="/css/mystyle.css">
+
+    <h1>Welcome to Groupie Tracker</h1>
 </head>
 <body>
     <form action="/relations" method="POST">
     {{range . }}
-    <button type="submit" value="{{.ID}}" name="ChosenBand"><img src="{{.Image}}" alt="Band Picture" width="275" height="310" ali ></button>
-      
-    {{end}}
+    {{.Name}}
+    <button type="submit" value="{{.ID}}" name="ChosenBandDL"><img src="{{.Image}}" alt="Band Picture" width="275" height="310" ali ></button>
+      {{end}}
+    
     </form>
+    <form action="/bandmembers" method="POST">
+
+{{range . }}
+
+        <button type = "submit" value="{{.ID}}" name ="ChosenBandMembers">See Band Members for {{.Name}}</button>
+{{end}}
+    </form>
+
+    <form action="/bandlocations" method="POST">
+        {{range . }}
+        
+                <button type = "submit" value="{{.ID}}" name ="ChosenBandLocations">See Locations for {{.Name}}</button>
+        {{end}}
+            </form>
 
 
 </body>

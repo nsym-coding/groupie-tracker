@@ -4,16 +4,18 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="/css/mystyle.css">
-
-    <title>Info</title>
+    <title>Document</title>
 </head>
 <body>
-    <h1>Dates and Locations</h1>
     
-    {{ range $key, $value := .}}
-    <pre>Location = {{$key}} 
-        Dates = {{$value}}</pre>
+    <h1>Members</h1>
+    {{range .Members }}
+    <pre>{{.}}</pre>
     {{end}}
+    <h1>Creation Date</h1>
+    {{range .FirstAlbum }}
+    <pre>{{.}}</pre>
+        {{end}}
+   
 </body>
 </html>

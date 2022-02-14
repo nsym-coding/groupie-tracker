@@ -1,18 +1,9 @@
-body{
-
-    align-content: center;
-}
-
-figure {
-    border: 1px #0b5d74c9 solid;
-    padding: 4px;
-    margin: auto;
+  h1{
+    color: blue;
   }
-  
-  figcaption {
-    background-color: black;
-    color: white;
-    font-style: italic;
-    padding: 2px;
+
+  body{
+    color: darkred;
     text-align: center;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
   }
