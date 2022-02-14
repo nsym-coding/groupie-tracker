@@ -1,14 +1,19 @@
+  
+  
   h1{
-    color: blue;
+    color: rgb(247, 235, 66);
   }
 
   body{
-    color: darkred;
+    background-image: url(https://i.pinimg.com/originals/0c/b2/ab/0cb2ab6226ff9987127a34145cf3478b.png);
+    color: rgb(207, 197, 197);
     text-align: center;
+    display: grid;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
   }
 
   button{
+    background-color: rgb(150, 150, 150);
     text-align: center;
   }
 
@@ -17,5 +22,12 @@
   }
 
   h2{
-    color: rgb(22, 219, 38);
+    color: rgb(103, 247, 0);
   }
+
+  p{
+    color: rgb(1, 4, 41);
+    text-align: center;
+    text-decoration-color: blue;
+  }
+  

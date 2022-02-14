@@ -155,9 +155,9 @@ func Requests() {
 	http.Handle("/", http.FileServer(http.Dir("./templates")))
 
 	http.HandleFunc("/index", index)
-	http.HandleFunc("/relations", relationsInfo)
+	//http.HandleFunc("/relations", relationsInfo)
 	//http.HandleFunc("/bandmembers", bandMembers)
-	http.HandleFunc("/bandlocations", bandLocations)
+	http.HandleFunc("/bandinfo", bandInfo)
 	http.ListenAndServe(":8080", nil)
 	log.Println("Server started on: http://localhost:8080")
 }
@@ -171,25 +171,27 @@ func index(w http.ResponseWriter, r *http.Request) {
 		tpl.ExecuteTemplate(w, "index.html", Info.Artists)
 
 	}
-}
-func relationsInfo(w http.ResponseWriter, r *http.Request) {
-
-	if r.URL.Path != "/relations" {
-		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
-	} else {
-
-		submit := r.FormValue("ChosenBandDL")
-		Numsubmit, _ := strconv.Atoi(submit)
-		fmt.Println(Numsubmit - 1)
-
-		p := Info.Relations[Numsubmit-1].DatesLocations
-
-		fmt.Println(Numsubmit - 1)
-
-		tpl.ExecuteTemplate(w, "relations.html", p)
-	}
 
 }
+
+// func relationsInfo(w http.ResponseWriter, r *http.Request) {
+
+// 	if r.URL.Path != "/relations" {
+// 		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
+// 	} else {
+
+// 		submit := r.FormValue("ChosenBandDL")
+// 		Numsubmit, _ := strconv.Atoi(submit)
+// 		fmt.Println(Numsubmit - 1)
+
+// 		p := Info.Relations[Numsubmit-1].DatesLocations
+
+// 		fmt.Println(Numsubmit - 1)
+
+// 		tpl.ExecuteTemplate(w, "relations.html", p)
+// 	}
+
+// }
 
 // func bandMembers(w http.ResponseWriter, r *http.Request) {
 // 	if r.URL.Path != "/bandmembers" {
@@ -207,12 +209,12 @@ func relationsInfo(w http.ResponseWriter, r *http.Request) {
 // 	}
 // }
 
-func bandLocations(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/bandlocations" {
+func bandInfo(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/bandinfo" {
 		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
 
 	} else {
-		submit := r.FormValue("ChosenBandLocations")
+		submit := r.FormValue("ChosenBandInfo")
 		Numsubmit, _ := strconv.Atoi(submit)
 		fmt.Println(Numsubmit - 1)
 
@@ -253,7 +255,7 @@ func bandLocations(w http.ResponseWriter, r *http.Request) {
 		// }
 		fmt.Println(Numsubmit - 1)
 
-		tpl.ExecuteTemplate(w, "bandlocations.html", nil)
+		tpl.ExecuteTemplate(w, "bandinfo.html", nil)
 
 	}
 }
