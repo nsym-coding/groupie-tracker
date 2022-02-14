@@ -152,7 +152,7 @@ func UnmarshallLocationsData() error {
 func Requests() {
 
 	http.HandleFunc("/", index)
-	http.HandleFunc("/info", artistInfo)
+	http.HandleFunc("/relations", relationsInfo)
 	http.ListenAndServe(":8080", nil)
 	log.Println("Server started on: http://localhost:8080")
 }
@@ -167,9 +167,9 @@ func index(w http.ResponseWriter, r *http.Request) {
 
 	}
 }
-func artistInfo(w http.ResponseWriter, r *http.Request) {
+func relationsInfo(w http.ResponseWriter, r *http.Request) {
 
-	if r.URL.Path != "/info" {
+	if r.URL.Path != "/relations" {
 		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
 	} else {
 
@@ -177,11 +177,11 @@ func artistInfo(w http.ResponseWriter, r *http.Request) {
 		Numsubmit, _ := strconv.Atoi(submit)
 		fmt.Println(Numsubmit - 1)
 
-		p := Info.Relations[Numsubmit-1].DatesLocations[Info.Locations[Numsubmit-1].Locations[0]]
+		p := Info.Relations[Numsubmit-1].DatesLocations
 
 		fmt.Println(Numsubmit - 1)
 
-		tpl.ExecuteTemplate(w, "info.html", p)
+		tpl.ExecuteTemplate(w, "relations.html", p)
 	}
 
 }

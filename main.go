@@ -12,6 +12,6 @@ func main() {
 	groupie.UnmarshallLocationsData()
 	groupie.Requests()
 
-	//fmt.Println(groupie.Information[0].Artists[0].Name)
+	//fmt.Println(groupie.Info.Relations[1])
 
 }

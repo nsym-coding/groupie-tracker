@@ -7,8 +7,10 @@
     <title>Info</title>
 </head>
 <body>
-    {{range . }}
-    <pre>{{.}}</pre>
+    <h1>Dates and Locations</h1>
+    
+    {{ range $key, $value := .}}
+    <pre>{{$key}}{{$value}}</pre>
     {{end}}
 </body>
 </html>
