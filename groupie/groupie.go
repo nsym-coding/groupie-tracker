@@ -156,7 +156,7 @@ func Requests() {
 
 	http.HandleFunc("/index", index)
 	http.HandleFunc("/relations", relationsInfo)
-	http.HandleFunc("/bandmembers", bandMembers)
+	//http.HandleFunc("/bandmembers", bandMembers)
 	http.HandleFunc("/bandlocations", bandLocations)
 	http.ListenAndServe(":8080", nil)
 	log.Println("Server started on: http://localhost:8080")
@@ -191,21 +191,21 @@ func relationsInfo(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func bandMembers(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/bandmembers" {
-		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
-	} else {
-		submit := r.FormValue("ChosenBandMembers")
-		Numsubmit, _ := strconv.Atoi(submit)
-		fmt.Println(Numsubmit - 1)
+// func bandMembers(w http.ResponseWriter, r *http.Request) {
+// 	if r.URL.Path != "/bandmembers" {
+// 		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
+// 	} else {
+// 		submit := r.FormValue("ChosenBandMembers")
+// 		Numsubmit, _ := strconv.Atoi(submit)
+// 		fmt.Println(Numsubmit - 1)
 
-		p := Info.Artists[Numsubmit-1]
+// 		p := Info.Artists[Numsubmit-1]
 
-		fmt.Println(Numsubmit - 1)
+// 		fmt.Println(Numsubmit - 1)
 
-		tpl.ExecuteTemplate(w, "bandmembers.html", p)
-	}
-}
+// 		tpl.ExecuteTemplate(w, "bandmembers.html", p)
+// 	}
+// }
 
 func bandLocations(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/bandlocations" {
@@ -219,8 +219,8 @@ func bandLocations(w http.ResponseWriter, r *http.Request) {
 		// var styleStart string = "<style> h1 { color: red('"
 		// var styleEnd string = "'); } </style>"
 
-		fmt.Fprintln(w, "<h1> LOCATIONS </h1>")
-		fmt.Fprintln(w, "<pre>"+strings.Join(Info.Locations[Numsubmit-1].Locations, "\n"))
+		fmt.Fprintln(w, " <h1> MEMBERS </h1> ")
+		fmt.Fprintln(w, "<pre>"+strings.Join(Info.Artists[Numsubmit-1].Members, "\n"))
 
 		fmt.Fprintln(w, "<h1> CREATION DATE </h1>")
 		fmt.Fprintln(w, Info.Artists[Numsubmit-1].CreationDate)
@@ -228,10 +228,24 @@ func bandLocations(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, "<h1> FIRST ALBUM </h1>")
 		fmt.Fprintln(w, Info.Artists[Numsubmit-1].FirstAlbum)
 
+		fmt.Fprintln(w, "<h1> LOCATIONS </h1>")
+		fmt.Fprintln(w, "<pre>"+strings.Join(Info.Locations[Numsubmit-1].Locations, "\n"))
+
 		fmt.Fprintln(w, " <h1> DATES </h1> ")
 		fmt.Fprintln(w, "<pre>"+strings.Join(Info.Dates[Numsubmit-1].Dates, "\n"))
 
-		// fmt.Fprintln(w, "<h1> DATES & LOCATIONS </h1>")
+		fmt.Fprintln(w, "<h1> DATES & LOCATIONS </h1>")
+		for _, v := range Info.Locations[Numsubmit-1].Locations {
+			fmt.Fprintln(w, "<h2>"+"<pre>"+v+"</pre>"+"</h2>")
+			for _, x := range Info.Relations {
+
+				for _, q := range x.DatesLocations[v] {
+					fmt.Fprintln(w, q)
+				}
+			}
+			fmt.Fprintln(w, "<br>")
+		}
+
 		// for _, value := range Info.Relations {
 		// 	for place, date := range value.DatesLocations {
 		// 		fmt.Fprintln(w, place[Numsubmit-1], date[Numsubmit-1])

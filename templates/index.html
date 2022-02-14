@@ -17,18 +17,12 @@
       {{end}}
     
     </form>
-    <form action="/bandmembers" method="POST">
-
-{{range . }}
-
-        <button type = "submit" value="{{.ID}}" name ="ChosenBandMembers">See Band Members for {{.Name}}</button>
-{{end}}
-    </form>
+   
 
     <form action="/bandlocations" method="POST">
         {{range . }}
         
-                <button type = "submit" value="{{.ID}}" name ="ChosenBandLocations">See Locations for {{.Name}}</button>
+                <button type = "submit" value="{{.ID}}" name ="ChosenBandLocations">See Band Information for {{.Name}}</button>
         {{end}}
             </form>
 
