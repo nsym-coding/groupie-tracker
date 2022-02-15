@@ -152,9 +152,9 @@ func UnmarshallLocationsData() error {
 
 func Requests() {
 
-	http.Handle("/", http.FileServer(http.Dir("./templates")))
+	http.Handle("/css/mystyle.css", http.FileServer(http.Dir("./templates")))
 
-	http.HandleFunc("/index", index)
+	http.HandleFunc("/", index)
 	//http.HandleFunc("/relations", relationsInfo)
 	//http.HandleFunc("/bandmembers", bandMembers)
 	http.HandleFunc("/bandinfo", bandInfo)
@@ -162,9 +162,18 @@ func Requests() {
 	log.Println("Server started on: http://localhost:8080")
 }
 
+// func Home(w http.ResponseWriter, r *http.Request) {
+// 	if r.URL.Path != "/" {
+// 		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
+// 	}else{
+// 		tpl.ExecuteTemplate(w, "home.html", nil)
+// 	}
+
+// }
+
 func index(w http.ResponseWriter, r *http.Request) {
 
-	if r.URL.Path != "/index" {
+	if r.URL.Path != "/" {
 		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
 	} else {
 
