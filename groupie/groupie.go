@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 )
@@ -78,6 +79,11 @@ type Relations struct {
 // 	fmt.Println(Info.Relations[1].DatesLocations[Info.Locations[1].Locations[0]])
 
 // }
+// port := os.Getenv("PORT")
+//     if port == "" {
+//         port = "8080" // Default port if not specified (with respect to heroku hosting)
+//     }
+//     http.ListenAndServe(":"+port, nil)
 
 func UnmarshalArtistData() {
 
@@ -156,7 +162,12 @@ func Requests() {
 
 	http.HandleFunc("/", index)
 	http.HandleFunc("/bandinfo", bandInfo)
-	http.ListenAndServe(":8080", nil)
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080" // Default port if not specified (with respect to heroku hosting)
+	}
+	http.ListenAndServe(":"+port, nil)
+	//http.ListenAndServe(":8080", nil)
 	log.Println("Server started on: http://localhost:8080")
 }
 
