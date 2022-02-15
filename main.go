@@ -12,6 +12,4 @@ func main() {
 	groupie.UnmarshallLocationsData()
 	groupie.Requests()
 
-	//fmt.Println(groupie.Info.Relations[1])
-
 }
