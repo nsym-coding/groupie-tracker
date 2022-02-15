@@ -155,26 +155,25 @@ func Requests() {
 	http.Handle("/css/mystyle.css", http.FileServer(http.Dir("./templates")))
 
 	http.HandleFunc("/", index)
-	//http.HandleFunc("/relations", relationsInfo)
-	//http.HandleFunc("/bandmembers", bandMembers)
 	http.HandleFunc("/bandinfo", bandInfo)
 	http.ListenAndServe(":8080", nil)
 	log.Println("Server started on: http://localhost:8080")
 }
 
-// func Home(w http.ResponseWriter, r *http.Request) {
-// 	if r.URL.Path != "/" {
-// 		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
-// 	}else{
-// 		tpl.ExecuteTemplate(w, "home.html", nil)
-// 	}
-
-// }
-
 func index(w http.ResponseWriter, r *http.Request) {
+	defer func() {
+		if err := recover(); err != nil {
+			tpl.ExecuteTemplate(w, "error.html", nil)
+			fmt.Fprintln(w, " An internal server error has occurred: ", http.StatusInternalServerError)
+			return
+		}
+	}()
 
 	if r.URL.Path != "/" {
-		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
+
+		tpl.ExecuteTemplate(w, "error.html", nil)
+		fmt.Fprintln(w, "\n\n\n\n Address not found: wrong address entered, status: ", http.StatusNotFound)
+
 	} else {
 
 		tpl.ExecuteTemplate(w, "index.html", Info.Artists)
@@ -183,52 +182,26 @@ func index(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// func relationsInfo(w http.ResponseWriter, r *http.Request) {
-
-// 	if r.URL.Path != "/relations" {
-// 		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
-// 	} else {
-
-// 		submit := r.FormValue("ChosenBandDL")
-// 		Numsubmit, _ := strconv.Atoi(submit)
-// 		fmt.Println(Numsubmit - 1)
-
-// 		p := Info.Relations[Numsubmit-1].DatesLocations
-
-// 		fmt.Println(Numsubmit - 1)
-
-// 		tpl.ExecuteTemplate(w, "relations.html", p)
-// 	}
-
-// }
-
-// func bandMembers(w http.ResponseWriter, r *http.Request) {
-// 	if r.URL.Path != "/bandmembers" {
-// 		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
-// 	} else {
-// 		submit := r.FormValue("ChosenBandMembers")
-// 		Numsubmit, _ := strconv.Atoi(submit)
-// 		fmt.Println(Numsubmit - 1)
-
-// 		p := Info.Artists[Numsubmit-1]
-
-// 		fmt.Println(Numsubmit - 1)
-
-// 		tpl.ExecuteTemplate(w, "bandmembers.html", p)
-// 	}
-// }
-
 func bandInfo(w http.ResponseWriter, r *http.Request) {
+	defer func() {
+		if err := recover(); err != nil {
+			tpl.ExecuteTemplate(w, "error.html", nil)
+			fmt.Fprintln(w, " An internal server error has occurred: ", http.StatusInternalServerError)
+			return
+
+		}
+	}()
 	if r.URL.Path != "/bandinfo" {
-		http.Error(w, "404 address not found: wrong address entered!", http.StatusNotFound)
+		tpl.ExecuteTemplate(w, "error.html", nil)
+		fmt.Fprintln(w, "\n\n\n\n Address not found: wrong address entered, status: ", http.StatusNotFound)
 
 	} else {
+		r.ParseForm()
 		submit := r.FormValue("ChosenBandInfo")
 		Numsubmit, _ := strconv.Atoi(submit)
 		fmt.Println(Numsubmit - 1)
 
-		// var styleStart string = "<style> h1 { color: red('"
-		// var styleEnd string = "'); } </style>"
+		fmt.Fprintln(w, "<h1>"+Info.Artists[Numsubmit-1].Name+"</h1>")
 
 		fmt.Fprintln(w, " <h1> MEMBERS </h1> ")
 		fmt.Fprintln(w, "<pre>"+strings.Join(Info.Artists[Numsubmit-1].Members, "\n"))
@@ -257,11 +230,6 @@ func bandInfo(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprintln(w, "<br>")
 		}
 
-		// for _, value := range Info.Relations {
-		// 	for place, date := range value.DatesLocations {
-		// 		fmt.Fprintln(w, place[Numsubmit-1], date[Numsubmit-1])
-		// 	}
-		// }
 		fmt.Println(Numsubmit - 1)
 
 		tpl.ExecuteTemplate(w, "bandinfo.html", nil)

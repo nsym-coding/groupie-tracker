@@ -8,6 +8,7 @@
     background-image: url(https://i.pinimg.com/originals/0c/b2/ab/0cb2ab6226ff9987127a34145cf3478b.png);
     color: rgb(207, 197, 197);
     text-align: center;
+    text-size-adjust: 100;
     display: grid;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
   }
@@ -29,5 +30,12 @@
     color: rgb(1, 4, 41);
     text-align: center;
     text-decoration-color: blue;
+  }
+
+  
+  #button{
+    position:absolute;
+     top:0;
+     right:0;
   }
   
