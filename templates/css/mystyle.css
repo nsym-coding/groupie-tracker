@@ -6,10 +6,11 @@
 
   body{
     background-image: url(https://i.pinimg.com/originals/0c/b2/ab/0cb2ab6226ff9987127a34145cf3478b.png);
-    color: rgba(119, 0, 255, 0.863);
+    color: rgba(9, 255, 0, 0.863);
     text-align: center;
     text-size-adjust: 100;
     display: grid;
+    text-decoration: double;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
   }
 
@@ -23,7 +24,7 @@
   }
 
   h2{
-    color: rgb(103, 247, 0);
+    color: rgb(217, 240, 9);
   }
 
   p{
