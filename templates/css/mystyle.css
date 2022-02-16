@@ -6,7 +6,7 @@
 
   body{
     background-image: url(https://i.pinimg.com/originals/0c/b2/ab/0cb2ab6226ff9987127a34145cf3478b.png);
-    color: rgb(207, 197, 197);
+    color: rgba(119, 0, 255, 0.863);
     text-align: center;
     text-size-adjust: 100;
     display: grid;
@@ -27,7 +27,7 @@
   }
 
   p{
-    color: rgb(1, 4, 41);
+    color: rgb(28, 255, 58);
     text-align: center;
     text-decoration-color: blue;
   }
