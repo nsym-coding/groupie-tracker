@@ -28,9 +28,10 @@
   }
 
   p{
-    color: rgb(28, 255, 58);
+    color: rgb(250, 0, 0);
     text-align: center;
     text-decoration-color: blue;
+    text-size-adjust: 10;
   }
 
   
