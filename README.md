@@ -2,7 +2,7 @@
 
 # Groupie Trackers consists on receiving a given API and manipulate the data contained in it, in order to create a site, displaying the information.
 
-We were given an API, that consists in four parts:
+We were given an API, that consists of four parts:
 
 The first one was, artists, containing information about some bands and artists like their name(s), image, in which year they began their activity, the date of their first album and the members.
 
